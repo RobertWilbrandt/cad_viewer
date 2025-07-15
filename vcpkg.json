@@ -1,0 +1,8 @@
+{
+  "name": "cad-viewer",
+  "version-string": "0.1.0",
+  "builtin-baseline": "b8ef2f3405ada27d1b0729c8f7142f034d72a162",
+  "dependencies": [
+    "qtbase"
+  ]
+}
