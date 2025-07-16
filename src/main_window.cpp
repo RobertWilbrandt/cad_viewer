@@ -7,22 +7,17 @@
 /*!\file
  *
  * \author  Robert Wilbrandt <robert@stamm-wilbrandt.de>
- * \date    2025-07-15
+ * \date    2025-07-16
  *
  */
 //----------------------------------------------------------------------
 #include "cad_viewer/main_window.h"
 
-#include <QApplication>
+namespace cad_viewer {
 
-using namespace cad_viewer;
-
-int main(int argc, char* argv[])
+MainWindow::MainWindow(QWidget* parent)
+  : QMainWindow{parent}
 {
-  QApplication app{argc, argv};
-
-  MainWindow window{};
-  window.show();
-
-  return app.exec();
 }
+
+} // namespace cad_viewer
