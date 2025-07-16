@@ -6,6 +6,16 @@ project(cad_viewer
     CXX
 )
 
+#
+# Build options
+#
+option(ASAN "Enable address sanitizer" OFF)
+
+if (ASAN)
+  set(CAD_VIEWER_COMPILE_FLAGS "${CAD_VIEWER_COMPILE_FLAGS};-fsanitize=address")
+  set(CAD_VIEWER_LINK_FLAGS "${CAD_VIEWER_COMPILE_FLAGS};-fsanitize=address")
+endif()
+
 # Qt6 Setup
 find_package(Qt6 CONFIG REQUIRED
   COMPONENTS

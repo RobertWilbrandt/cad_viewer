@@ -24,3 +24,12 @@ target_link_libraries(cad_viewer
     Qt6::Widgets
     Qt6::OpenGLWidgets
 )
+
+target_compile_options(cad_viewer
+  PRIVATE
+    ${CAD_VIEWER_COMPILE_FLAGS}
+)
+target_link_libraries(cad_viewer
+  PRIVATE
+    ${CAD_VIEWER_LINK_FLAGS}
+)
