@@ -11,17 +11,22 @@
  *
  */
 //----------------------------------------------------------------------
-#include "cad_viewer/main_window.h"
+#ifndef CAD_VIEWER_VIEW_WIDGET_H_INCLUDED
+#define CAD_VIEWER_VIEW_WIDGET_H_INCLUDED
 
-#include "cad_viewer/view_widget.h"
+#include <QOpenGLWidget>
 
 namespace cad_viewer {
 
-MainWindow::MainWindow(QWidget* parent)
-  : QMainWindow{parent}
+class ViewWidget : public QOpenGLWidget
 {
-  auto* view_widget = new ViewWidget{this};
-  setCentralWidget(view_widget);
-}
+  Q_OBJECT
+public:
+  explicit ViewWidget(QWidget* parent = nullptr);
+
+private:
+};
 
 } // namespace cad_viewer
+
+#endif // CAD_VIEWER_VIEW_WIDGET_H_INCLUDED

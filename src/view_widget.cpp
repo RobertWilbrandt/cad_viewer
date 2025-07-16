@@ -11,17 +11,13 @@
  *
  */
 //----------------------------------------------------------------------
-#include "cad_viewer/main_window.h"
-
 #include "cad_viewer/view_widget.h"
 
 namespace cad_viewer {
 
-MainWindow::MainWindow(QWidget* parent)
-  : QMainWindow{parent}
+ViewWidget::ViewWidget(QWidget* parent)
+  : QOpenGLWidget{parent}
 {
-  auto* view_widget = new ViewWidget{this};
-  setCentralWidget(view_widget);
 }
 
 } // namespace cad_viewer

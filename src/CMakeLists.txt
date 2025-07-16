@@ -7,6 +7,7 @@ target_sources(cad_viewer
   PRIVATE
     main.cpp
     main_window.cpp
+    view_widget.cpp
 )
 target_sources(cad_viewer
   PRIVATE
@@ -15,9 +16,11 @@ target_sources(cad_viewer
   BASE_DIRS ${CMAKE_SOURCE_DIR}/include
   FILES
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/main_window.h
+    ${CMAKE_SOURCE_DIR}/include/cad_viewer/view_widget.h
 )
 
 target_link_libraries(cad_viewer
   PRIVATE
     Qt6::Widgets
+    Qt6::OpenGLWidgets
 )
