@@ -19,6 +19,7 @@
 
 class V3d_Viewer;
 class V3d_View;
+class AIS_InteractiveContext;
 
 namespace cad_viewer {
 
@@ -27,10 +28,18 @@ class ViewWidget : public QOpenGLWidget
   Q_OBJECT
 public:
   explicit ViewWidget(QWidget* parent = nullptr);
+  ~ViewWidget();
+
+  ViewWidget(const ViewWidget&)            = delete;
+  ViewWidget& operator=(const ViewWidget&) = delete;
+
+  void initializeGL() override;
+  void paintGL() override;
 
 private:
   Handle(V3d_Viewer) m_viewer;
   Handle(V3d_View) m_view;
+  Handle(AIS_InteractiveContext) m_context;
 };
 
 } // namespace cad_viewer

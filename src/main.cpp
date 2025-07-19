@@ -14,12 +14,19 @@
 #include "cad_viewer/main_window.h"
 
 #include <QApplication>
+#include <QSurfaceFormat>
 
 using namespace cad_viewer;
 
 int main(int argc, char* argv[])
 {
   QApplication app{argc, argv};
+
+  QSurfaceFormat format{};
+  format.setDepthBufferSize(24);
+  format.setStencilBufferSize(8);
+  format.setProfile(QSurfaceFormat::CompatibilityProfile);
+  QSurfaceFormat::setDefaultFormat(format);
 
   MainWindow window{};
   window.show();

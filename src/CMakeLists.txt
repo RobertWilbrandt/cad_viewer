@@ -31,6 +31,11 @@ target_link_libraries(cad_viewer
     TKV3d
     TKernel
 )
+target_compile_features(cad_viewer
+  PRIVATE
+    cxx_std_20
+    c_std_17
+)
 
 target_compile_options(cad_viewer
   PRIVATE
