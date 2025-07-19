@@ -15,6 +15,10 @@
 #define CAD_VIEWER_VIEW_WIDGET_H_INCLUDED
 
 #include <QOpenGLWidget>
+#include <Standard_Handle.hxx>
+
+class V3d_Viewer;
+class V3d_View;
 
 namespace cad_viewer {
 
@@ -25,6 +29,8 @@ public:
   explicit ViewWidget(QWidget* parent = nullptr);
 
 private:
+  Handle(V3d_Viewer) m_viewer;
+  Handle(V3d_View) m_view;
 };
 
 } // namespace cad_viewer

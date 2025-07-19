@@ -25,4 +25,7 @@ find_package(Qt6 CONFIG REQUIRED
 )
 qt_standard_project_setup()
 
+# OpenCASCADE setup
+find_package(OpenCASCADE CONFIG REQUIRED)
+
 add_subdirectory(src)
