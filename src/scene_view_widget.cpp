@@ -7,21 +7,25 @@
 /*!\file
  *
  * \author  Robert Wilbrandt <robert@stamm-wilbrandt.de>
- * \date    2025-07-16
+ * \date    2025-07-20
  *
  */
 //----------------------------------------------------------------------
-#include "cad_viewer/main_window.h"
-
 #include "cad_viewer/scene_view_widget.h"
+
+#include "cad_viewer/view_widget.h"
+
+#include <QVBoxLayout>
 
 namespace cad_viewer {
 
-MainWindow::MainWindow(QWidget* parent)
-  : QMainWindow{parent}
+SceneViewWidget::SceneViewWidget(QWidget* parent)
+  : QWidget{parent}
+  , m_view_widget{new ViewWidget{this}}
 {
-  auto* scene_view_widget = new SceneViewWidget{this};
-  setCentralWidget(scene_view_widget);
+  auto* layout = new QVBoxLayout{this};
+  layout->addWidget(m_view_widget);
+  setLayout(layout);
 }
 
 } // namespace cad_viewer
