@@ -49,7 +49,7 @@ void MainWindow::createMenus()
 
   auto* exit_action =
     new QAction{QIcon::fromTheme(QIcon::ThemeIcon::ApplicationExit), tr("&Exit"), this};
-  exit_action->setShortcuts(QKeySequence::Close);
+  exit_action->setShortcuts(QKeySequence::Quit);
   exit_action->setStatusTip(tr("Exit Application"));
   QObject::connect(exit_action, &QAction::triggered, this, &MainWindow::exit);
   file_menu->addAction(exit_action);
