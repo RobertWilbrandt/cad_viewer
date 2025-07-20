@@ -24,6 +24,7 @@ class QSinglePointEvent;
 
 class V3d_View;
 class AIS_InteractiveContext;
+class AIS_AnimationCamera;
 class AIS_ViewController;
 
 namespace cad_viewer {
@@ -38,6 +39,8 @@ public:
 
   void initializeGL() override;
   void paintGL() override;
+
+  [[nodiscard]] Handle(AIS_AnimationCamera) cameraAnimation() const;
 
   void cleanup();
 

@@ -145,6 +145,11 @@ void ViewWidget::paintGL()
   m_view_controller->FlushViewEvents(m_context, m_view, true);
 }
 
+Handle(AIS_AnimationCamera) ViewWidget::cameraAnimation() const
+{
+  return m_view_controller->ViewAnimation();
+}
+
 void ViewWidget::cleanup()
 {
   m_view->Remove();

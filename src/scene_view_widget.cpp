@@ -17,6 +17,7 @@
 #include "cad_viewer/widget_view_controller.h"
 
 #include <AIS_InteractiveContext.hxx>
+#include <AIS_ViewCube.hxx>
 #include <Aspect_DisplayConnection.hxx>
 #include <OpenGl_GraphicDriver.hxx>
 #include <QCoreApplication>
@@ -53,6 +54,9 @@ SceneViewWidget::SceneViewWidget(QWidget* parent)
   layout->addWidget(m_view_widget);
   setLayout(layout);
 
+  m_view_cube = createDefaultViewCube();
+  m_context->Display(m_view_cube, 0, 0, false);
+
   QObject::connect(QCoreApplication::instance(),
                    &QCoreApplication::aboutToQuit,
                    this,
@@ -82,6 +86,15 @@ void SceneViewWidget::cleanup()
   m_view_widget->setParent(nullptr);
   delete m_view_widget;
   m_view_widget = nullptr;
+}
+
+Handle(AIS_ViewCube) SceneViewWidget::createDefaultViewCube() const
+{
+  Handle(AIS_ViewCube) result = new AIS_ViewCube{};
+  result->SetViewAnimation(m_view_widget->cameraAnimation());
+  result->SetFixedAnimationLoop(false);
+  result->SetAutoStartAnimation(true);
+  return result;
 }
 
 } // namespace cad_viewer

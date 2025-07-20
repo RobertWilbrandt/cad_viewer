@@ -20,6 +20,7 @@
 class V3d_Viewer;
 class V3d_View;
 class AIS_InteractiveContext;
+class AIS_ViewCube;
 
 namespace cad_viewer {
 
@@ -35,9 +36,13 @@ public slots:
   void cleanup();
 
 private:
+  Handle(AIS_ViewCube) createDefaultViewCube() const;
+
   Handle(V3d_Viewer) m_viewer;
   Handle(V3d_View) m_view;
   Handle(AIS_InteractiveContext) m_context;
+
+  Handle(AIS_ViewCube) m_view_cube;
 
   ViewWidget* m_view_widget;
 };
