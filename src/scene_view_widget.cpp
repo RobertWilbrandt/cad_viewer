@@ -51,6 +51,7 @@ SceneViewWidget::SceneViewWidget(QWidget* parent)
   m_view_widget = new ViewWidget{m_view, m_context};
 
   auto* layout = new QVBoxLayout{this};
+  layout->setContentsMargins(0, 0, 0, 0);
   layout->addWidget(m_view_widget);
   setLayout(layout);
 
