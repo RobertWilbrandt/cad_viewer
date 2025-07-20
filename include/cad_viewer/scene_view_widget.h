@@ -29,10 +29,6 @@ class SceneViewWidget : public QWidget
   Q_OBJECT
 public:
   explicit SceneViewWidget(QWidget* parent = nullptr);
-  ~SceneViewWidget();
-
-  SceneViewWidget(const SceneViewWidget&)            = delete;
-  SceneViewWidget& operator=(const SceneViewWidget&) = delete;
 
 public slots:
   void cleanup();

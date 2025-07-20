@@ -56,17 +56,10 @@ SceneViewWidget::SceneViewWidget(QWidget* parent)
                    Qt::DirectConnection);
 }
 
-SceneViewWidget::~SceneViewWidget()
-{
-  std::cerr << "~SceneViewWidget" << std::endl;
-}
-
 void SceneViewWidget::cleanup()
 {
-  std::cerr << "SceneViewWidget::cleanup()" << std::endl;
   if (!m_view_widget)
   {
-    std::cerr << "Already destroyed" << std::endl;
     return;
   }
   m_view_widget->makeCurrent();
@@ -85,7 +78,6 @@ void SceneViewWidget::cleanup()
   m_view_widget->setParent(nullptr);
   delete m_view_widget;
   m_view_widget = nullptr;
-  std::cerr << "SceneViewWidget::cleanup() done" << std::endl;
 }
 
 } // namespace cad_viewer

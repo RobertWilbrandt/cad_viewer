@@ -32,7 +32,6 @@ MainWindow::MainWindow(QWidget* parent)
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-  std::cerr << "MainWindow::closeEvent()" << std::endl;
   emit closeRequestReceived();
   QMainWindow::closeEvent(event);
 }

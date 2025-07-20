@@ -95,7 +95,6 @@ void ViewWidget::initializeGL()
 
 void ViewWidget::paintGL()
 {
-  std::cerr << "paintGL" << std::endl;
   if (m_view.IsNull())
   {
     return;
@@ -104,7 +103,6 @@ void ViewWidget::paintGL()
   const auto native_handle = static_cast<Aspect_Drawable>(winId());
   if (m_view->Window()->NativeHandle() != native_handle)
   {
-    std::cerr << "Native window change!" << std::endl;
     initializeGL();
     return;
   }
@@ -114,13 +112,8 @@ void ViewWidget::paintGL()
   Handle(OpenGl_FrameBuffer) frame_buffer = context->DefaultFrameBuffer();
   if (frame_buffer.IsNull())
   {
-    std::cerr << "Creating new FBO" << std::endl;
     frame_buffer = new OcctQtFrameBuffer{};
     context->SetDefaultFrameBuffer(frame_buffer);
-  }
-  else
-  {
-    std::cerr << "No new FBO needed" << std::endl;
   }
 
   if (!frame_buffer->InitWrapper(context))
