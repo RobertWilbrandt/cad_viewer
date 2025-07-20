@@ -11,37 +11,31 @@
  *
  */
 //----------------------------------------------------------------------
-#ifndef CAD_VIEWER_SCENE_VIEW_WIDGET_H_INCLUDED
-#define CAD_VIEWER_SCENE_VIEW_WIDGET_H_INCLUDED
+#ifndef CAD_VIEWER_WIDGET_VIEW_CONTROLLER_H_INCLUDED
+#define CAD_VIEWER_WIDGET_VIEW_CONTROLLER_H_INCLUDED
 
-#include <QWidget>
+#include <AIS_ViewController.hxx>
 #include <Standard_Handle.hxx>
 
-class V3d_Viewer;
-class V3d_View;
+class QWidget;
 class AIS_InteractiveContext;
+class V3d_View;
 
 namespace cad_viewer {
 
-class ViewWidget;
-
-class SceneViewWidget : public QWidget
+class WidgetViewController : public AIS_ViewController
 {
-  Q_OBJECT
 public:
-  explicit SceneViewWidget(QWidget* parent = nullptr);
+  explicit WidgetViewController(QWidget* widget);
 
-public slots:
-  void cleanup();
+protected:
+  void handleViewRedraw(const Handle(AIS_InteractiveContext) & context,
+                        const Handle(V3d_View) & view) override;
 
 private:
-  Handle(V3d_Viewer) m_viewer;
-  Handle(V3d_View) m_view;
-  Handle(AIS_InteractiveContext) m_context;
-
-  ViewWidget* m_view_widget;
+  QWidget* m_widget;
 };
 
 } // namespace cad_viewer
 
-#endif // CAD_VIEWER_SCENE_VIEW_WIDGET_H_INCLUDED
+#endif // CAD_VIEWER_WIDGET_VIEW_CONTROLLER_H_INCLUDED

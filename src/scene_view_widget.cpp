@@ -14,7 +14,9 @@
 #include "cad_viewer/scene_view_widget.h"
 
 #include "cad_viewer/view_widget.h"
+#include "cad_viewer/widget_view_controller.h"
 
+#include <AIS_InteractiveContext.hxx>
 #include <Aspect_DisplayConnection.hxx>
 #include <OpenGl_GraphicDriver.hxx>
 #include <QCoreApplication>
@@ -40,10 +42,12 @@ SceneViewWidget::SceneViewWidget(QWidget* parent)
   m_viewer->SetLightOn();
   m_viewer->ActivateGrid(Aspect_GT_Circular, Aspect_GDM_Lines);
 
+  m_context = new AIS_InteractiveContext{m_viewer};
+
   m_view = m_viewer->CreateView();
   m_view->SetImmediateUpdate(false);
 
-  m_view_widget = new ViewWidget{m_view, nullptr};
+  m_view_widget = new ViewWidget{m_view, m_context};
 
   auto* layout = new QVBoxLayout{this};
   layout->addWidget(m_view_widget);

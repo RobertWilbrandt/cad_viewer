@@ -13,6 +13,8 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/view_widget.h"
 
+#include "cad_viewer/widget_view_controller.h"
+
 #include <AIS_InteractiveContext.hxx>
 #include <Aspect_DisplayConnection.hxx>
 #include <Aspect_NeutralWindow.hxx>
@@ -49,9 +51,13 @@ public:
 
 namespace cad_viewer {
 
-ViewWidget::ViewWidget(const Handle(V3d_View) & view, QWidget* parent)
+ViewWidget::ViewWidget(const Handle(V3d_View) & view,
+                       const Handle(AIS_InteractiveContext) & context,
+                       QWidget* parent)
   : QOpenGLWidget{parent}
   , m_view{view}
+  , m_context{context}
+  , m_view_controller{std::make_shared<WidgetViewController>(this)}
 {
   // Widget setup
   setMouseTracking(true);
@@ -134,13 +140,15 @@ void ViewWidget::paintGL()
   }
 
   m_view->InvalidateImmediate();
-  m_view->Redraw();
+  m_view_controller->FlushViewEvents(m_context, m_view, true);
 }
 
 void ViewWidget::cleanup()
 {
   m_view->Remove();
   m_view.Nullify();
+
+  m_context.Nullify();
 }
 
 } // namespace cad_viewer

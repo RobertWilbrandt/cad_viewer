@@ -16,9 +16,11 @@
 
 #include <QOpenGLWidget>
 #include <Standard_Handle.hxx>
+#include <memory>
 
 class V3d_View;
 class AIS_InteractiveContext;
+class AIS_ViewController;
 
 namespace cad_viewer {
 
@@ -26,7 +28,9 @@ class ViewWidget : public QOpenGLWidget
 {
   Q_OBJECT
 public:
-  explicit ViewWidget(const Handle(V3d_View) & view, QWidget* parent = nullptr);
+  explicit ViewWidget(const Handle(V3d_View) & view,
+                      const Handle(AIS_InteractiveContext) & context,
+                      QWidget* parent = nullptr);
 
   void initializeGL() override;
   void paintGL() override;
@@ -35,6 +39,9 @@ public:
 
 private:
   Handle(V3d_View) m_view;
+  Handle(AIS_InteractiveContext) m_context;
+
+  std::shared_ptr<AIS_ViewController> m_view_controller;
 };
 
 } // namespace cad_viewer

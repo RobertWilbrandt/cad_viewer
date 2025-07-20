@@ -10,6 +10,7 @@ target_sources(cad_viewer
     main_window.cpp
     scene_view_widget.cpp
     view_widget.cpp
+    widget_view_controller.cpp
 )
 target_sources(cad_viewer
   PRIVATE
@@ -20,6 +21,7 @@ target_sources(cad_viewer
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/main_window.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/scene_view_widget.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/view_widget.h
+    ${CMAKE_SOURCE_DIR}/include/cad_viewer/widget_view_controller.h
 )
 
 # Target_include_directories(cad_viewer
