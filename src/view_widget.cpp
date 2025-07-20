@@ -25,6 +25,7 @@
 #include <QMouseEvent>
 #include <QOpenGLContext>
 #include <QSurfaceFormat>
+#include <QWheelEvent>
 #include <V3d_View.hxx>
 #include <V3d_Viewer.hxx>
 
@@ -160,10 +161,8 @@ void ViewWidget::mousePressEvent(QMouseEvent* event)
     return;
   }
 
-  const Graphic3d_Vec2i position{static_cast<int>(event->position().x()),
-                                 static_cast<int>(event->position().y())};
   if (m_view_controller->UpdateMouseButtons(
-        position, convert(event->buttons()), convert(event->modifiers()), false))
+        mousePosition(event), convert(event->buttons()), convert(event->modifiers()), false))
   {
     update();
   }
@@ -177,10 +176,8 @@ void ViewWidget::mouseReleaseEvent(QMouseEvent* event)
     return;
   }
 
-  const Graphic3d_Vec2i position{static_cast<int>(event->position().x()),
-                                 static_cast<int>(event->position().y())};
   if (m_view_controller->UpdateMouseButtons(
-        position, convert(event->buttons()), convert(event->modifiers()), false))
+        mousePosition(event), convert(event->buttons()), convert(event->modifiers()), false))
   {
     update();
   }
@@ -194,13 +191,32 @@ void ViewWidget::mouseMoveEvent(QMouseEvent* event)
     return;
   }
 
-  const Graphic3d_Vec2i position{static_cast<int>(event->position().x()),
-                                 static_cast<int>(event->position().y())};
   if (m_view_controller->UpdateMousePosition(
-        position, convert(event->buttons()), convert(event->modifiers()), false))
+        mousePosition(event), convert(event->buttons()), convert(event->modifiers()), false))
   {
     update();
   }
+}
+
+void ViewWidget::wheelEvent(QWheelEvent* event)
+{
+  QOpenGLWidget::wheelEvent(event);
+  if (m_view.IsNull())
+  {
+    return;
+  }
+
+  if (m_view_controller->UpdateZoom(
+        Aspect_ScrollDelta{mousePosition(event), event->angleDelta().y() / 8.0}))
+  {
+    update();
+  }
+}
+
+Graphic3d_Vec2i ViewWidget::mousePosition(QSinglePointEvent* event) const
+{
+  return Graphic3d_Vec2i{static_cast<int>(event->position().x()),
+                         static_cast<int>(event->position().y())};
 }
 
 Aspect_VKeyMouse ViewWidget::convert(Qt::MouseButtons buttons) const
