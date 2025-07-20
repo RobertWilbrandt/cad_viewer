@@ -22,6 +22,19 @@ MainWindow::MainWindow(QWidget* parent)
 {
   auto* scene_view_widget = new SceneViewWidget{this};
   setCentralWidget(scene_view_widget);
+
+  QObject::connect(this,
+                   &MainWindow::closeRequestReceived,
+                   scene_view_widget,
+                   &SceneViewWidget::cleanup,
+                   Qt::DirectConnection);
+}
+
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+  std::cerr << "MainWindow::closeEvent()" << std::endl;
+  emit closeRequestReceived();
+  QMainWindow::closeEvent(event);
 }
 
 } // namespace cad_viewer

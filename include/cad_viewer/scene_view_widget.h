@@ -34,6 +34,9 @@ public:
   SceneViewWidget(const SceneViewWidget&)            = delete;
   SceneViewWidget& operator=(const SceneViewWidget&) = delete;
 
+public slots:
+  void cleanup();
+
 private:
   Handle(V3d_Viewer) m_viewer;
   Handle(V3d_View) m_view;

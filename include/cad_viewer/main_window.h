@@ -16,6 +16,8 @@
 
 #include <QMainWindow>
 
+class QCloseEvent;
+
 namespace cad_viewer {
 
 class MainWindow : public QMainWindow
@@ -24,7 +26,11 @@ class MainWindow : public QMainWindow
 public:
   explicit MainWindow(QWidget* parent = nullptr);
 
-private:
+signals:
+  void closeRequestReceived();
+
+protected:
+  void closeEvent(QCloseEvent* event) override;
 };
 
 } // namespace cad_viewer

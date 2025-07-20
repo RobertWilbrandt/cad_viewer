@@ -17,6 +17,7 @@
 
 #include <Aspect_DisplayConnection.hxx>
 #include <OpenGl_GraphicDriver.hxx>
+#include <QCoreApplication>
 #include <QOpenGLContext>
 #include <QVBoxLayout>
 #include <V3d_View.hxx>
@@ -47,10 +48,27 @@ SceneViewWidget::SceneViewWidget(QWidget* parent)
   auto* layout = new QVBoxLayout{this};
   layout->addWidget(m_view_widget);
   setLayout(layout);
+
+  QObject::connect(QCoreApplication::instance(),
+                   &QCoreApplication::aboutToQuit,
+                   this,
+                   &SceneViewWidget::cleanup,
+                   Qt::DirectConnection);
 }
 
 SceneViewWidget::~SceneViewWidget()
 {
+  std::cerr << "~SceneViewWidget" << std::endl;
+}
+
+void SceneViewWidget::cleanup()
+{
+  std::cerr << "SceneViewWidget::cleanup()" << std::endl;
+  if (!m_view_widget)
+  {
+    std::cerr << "Already destroyed" << std::endl;
+    return;
+  }
   m_view_widget->makeCurrent();
 
   Handle(Aspect_DisplayConnection) display_connection =
@@ -63,6 +81,11 @@ SceneViewWidget::~SceneViewWidget()
   display_connection.Nullify();
 
   m_view_widget->doneCurrent();
+
+  m_view_widget->setParent(nullptr);
+  delete m_view_widget;
+  m_view_widget = nullptr;
+  std::cerr << "SceneViewWidget::cleanup() done" << std::endl;
 }
 
 } // namespace cad_viewer
