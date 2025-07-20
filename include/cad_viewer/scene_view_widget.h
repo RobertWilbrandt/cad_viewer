@@ -15,6 +15,10 @@
 #define CAD_VIEWER_SCENE_VIEW_WIDGET_H_INCLUDED
 
 #include <QWidget>
+#include <Standard_Handle.hxx>
+
+class V3d_Viewer;
+class V3d_View;
 
 namespace cad_viewer {
 
@@ -25,8 +29,15 @@ class SceneViewWidget : public QWidget
   Q_OBJECT
 public:
   explicit SceneViewWidget(QWidget* parent = nullptr);
+  ~SceneViewWidget();
+
+  SceneViewWidget(const SceneViewWidget&)            = delete;
+  SceneViewWidget& operator=(const SceneViewWidget&) = delete;
 
 private:
+  Handle(V3d_Viewer) m_viewer;
+  Handle(V3d_View) m_view;
+
   ViewWidget* m_view_widget;
 };
 

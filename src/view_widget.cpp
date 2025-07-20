@@ -49,26 +49,10 @@ public:
 
 namespace cad_viewer {
 
-ViewWidget::ViewWidget(QWidget* parent)
+ViewWidget::ViewWidget(const Handle(V3d_View) & view, QWidget* parent)
   : QOpenGLWidget{parent}
+  , m_view{view}
 {
-  Handle(Aspect_DisplayConnection) display_connection = new Aspect_DisplayConnection{};
-  Handle(OpenGl_GraphicDriver) graphic_driver = new OpenGl_GraphicDriver{display_connection, false};
-  graphic_driver->ChangeOptions().buffersNoSwap      = true;  // QOpenGLWidget handles buffer swap
-  graphic_driver->ChangeOptions().buffersOpaqueAlpha = true;  // Don't write to alpha channel
-  graphic_driver->ChangeOptions().useSystemBuffer    = false; // Always use offscreen FBO
-
-  m_viewer = new V3d_Viewer{graphic_driver};
-  m_viewer->SetDefaultBackgroundColor(Quantity_NOC_LIGHTGRAY);
-  m_viewer->SetDefaultLights();
-  m_viewer->SetLightOn();
-  m_viewer->ActivateGrid(Aspect_GT_Circular, Aspect_GDM_Lines);
-
-  m_context = new AIS_InteractiveContext{m_viewer};
-
-  m_view = m_viewer->CreateView();
-  m_view->SetImmediateUpdate(false);
-
   // Widget setup
   setMouseTracking(true);
   setBackgroundRole(QPalette::NoRole);
@@ -107,18 +91,12 @@ void ViewWidget::initializeGL()
   window->SetSize(cur_rect.right() - cur_rect.left(), cur_rect.bottom() - cur_rect.top());
   window->SetNativeHandle(native_handle);
   m_view->SetWindow(window, gl_context->RenderingContext());
-
-  // Make sure cleanup is performed when context still exists
-  QObject::connect(context(),
-                   &QOpenGLContext::aboutToBeDestroyed,
-                   this,
-                   &ViewWidget::cleanup,
-                   Qt::DirectConnection);
 }
 
 void ViewWidget::paintGL()
 {
-  if (m_viewer.IsNull() || m_view.IsNull())
+  std::cerr << "paintGL" << std::endl;
+  if (m_view.IsNull())
   {
     return;
   }
@@ -131,8 +109,8 @@ void ViewWidget::paintGL()
     return;
   }
 
-  auto graphic_driver            = Handle(OpenGl_GraphicDriver)::DownCast(m_viewer->Driver());
-  Handle(OpenGl_Context) context = graphic_driver->GetSharedContext();
+  auto graphic_driver = Handle(OpenGl_GraphicDriver)::DownCast(m_view->Viewer()->Driver());
+  Handle(OpenGl_Context) context          = graphic_driver->GetSharedContext();
   Handle(OpenGl_FrameBuffer) frame_buffer = context->DefaultFrameBuffer();
   if (frame_buffer.IsNull())
   {
@@ -168,20 +146,8 @@ void ViewWidget::paintGL()
 
 void ViewWidget::cleanup()
 {
-  // TODO this needs to happen somewhere else: The signal is sent from the destructor, so all occt
-  // instances are already destroyed
-  makeCurrent();
-  Handle(Aspect_DisplayConnection) display_connection =
-    m_viewer->Driver()->GetDisplayConnection(); // Make sure to not destroy connection yet
-
-  m_context->RemoveAll(false);
-  m_context.Nullify();
   m_view->Remove();
   m_view.Nullify();
-  m_viewer.Nullify();
-
-  display_connection.Nullify();
-  doneCurrent();
 }
 
 } // namespace cad_viewer

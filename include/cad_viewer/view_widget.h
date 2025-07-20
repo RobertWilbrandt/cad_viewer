@@ -17,7 +17,6 @@
 #include <QOpenGLWidget>
 #include <Standard_Handle.hxx>
 
-class V3d_Viewer;
 class V3d_View;
 class AIS_InteractiveContext;
 
@@ -27,18 +26,15 @@ class ViewWidget : public QOpenGLWidget
 {
   Q_OBJECT
 public:
-  explicit ViewWidget(QWidget* parent = nullptr);
+  explicit ViewWidget(const Handle(V3d_View) & view, QWidget* parent = nullptr);
 
   void initializeGL() override;
   void paintGL() override;
 
-private slots:
   void cleanup();
 
 private:
-  Handle(V3d_Viewer) m_viewer;
   Handle(V3d_View) m_view;
-  Handle(AIS_InteractiveContext) m_context;
 };
 
 } // namespace cad_viewer
