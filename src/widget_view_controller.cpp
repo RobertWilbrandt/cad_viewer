@@ -20,6 +20,7 @@ namespace cad_viewer {
 WidgetViewController::WidgetViewController(QWidget* widget)
   : m_widget{widget}
 {
+  SetRotationMode(AIS_RotationMode_CameraAt);
 }
 
 void WidgetViewController::handleViewRedraw(const Handle(AIS_InteractiveContext) & context,
