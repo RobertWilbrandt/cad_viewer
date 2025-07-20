@@ -31,6 +31,12 @@ signals:
 
 protected:
   void closeEvent(QCloseEvent* event) override;
+
+private:
+  void createMenus();
+
+private slots:
+  void exit();
 };
 
 } // namespace cad_viewer
