@@ -1,9 +1,35 @@
 {
   "name": "cad-viewer",
   "version-string": "0.1.0",
-  "builtin-baseline": "b8ef2f3405ada27d1b0729c8f7142f034d72a162",
+  "builtin-baseline": "b91c3336aee7f32412508f7dd351ae2cabdb8819",
   "dependencies": [
     "opencascade",
-    "qtbase"
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "concurrent",
+        "doubleconversion",
+        "fontconfig",
+        "freetype",
+        "glib",
+        "gui",
+        "icu",
+        "jpeg",
+        "opengl",
+        "openssl",
+        "pcre2",
+        "png",
+        "thread",
+        "widgets",
+        "xcb",
+        "xcb-xlib",
+        "xkb",
+        "xkbcommon-x11",
+        "xlib",
+        "xrender",
+        "zstd"
+      ]
+    }
   ]
 }
