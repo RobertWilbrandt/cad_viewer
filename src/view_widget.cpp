@@ -20,6 +20,7 @@
 #include <OpenGl_Context.hxx>
 #include <OpenGl_FrameBuffer.hxx>
 #include <OpenGl_GraphicDriver.hxx>
+#include <QOpenGLContext>
 #include <QSurfaceFormat>
 #include <V3d_View.hxx>
 #include <V3d_Viewer.hxx>
@@ -85,21 +86,6 @@ ViewWidget::ViewWidget(QWidget* parent)
   setAttribute(Qt::WA_NativeWindow); // Make sure winId() returns a valid handle later on
 }
 
-ViewWidget::~ViewWidget()
-{
-  Handle(Aspect_DisplayConnection) display_connection =
-    m_viewer->Driver()->GetDisplayConnection(); // Make sure to not destroy connection yet
-
-  m_context->RemoveAll(false);
-  m_context.Nullify();
-  m_view->Remove();
-  m_view.Nullify();
-  m_viewer.Nullify();
-
-  makeCurrent();
-  display_connection.Nullify();
-}
-
 void ViewWidget::initializeGL()
 {
   const auto cur_rect = rect();
@@ -121,6 +107,13 @@ void ViewWidget::initializeGL()
   window->SetSize(cur_rect.right() - cur_rect.left(), cur_rect.bottom() - cur_rect.top());
   window->SetNativeHandle(native_handle);
   m_view->SetWindow(window, gl_context->RenderingContext());
+
+  // Make sure cleanup is performed when context still exists
+  QObject::connect(context(),
+                   &QOpenGLContext::aboutToBeDestroyed,
+                   this,
+                   &ViewWidget::cleanup,
+                   Qt::DirectConnection);
 }
 
 void ViewWidget::paintGL()
@@ -130,7 +123,6 @@ void ViewWidget::paintGL()
     return;
   }
 
-  makeCurrent();
   const auto native_handle = static_cast<Aspect_Drawable>(winId());
   if (m_view->Window()->NativeHandle() != native_handle)
   {
@@ -172,6 +164,24 @@ void ViewWidget::paintGL()
 
   m_view->InvalidateImmediate();
   m_view->Redraw();
+}
+
+void ViewWidget::cleanup()
+{
+  // TODO this needs to happen somewhere else: The signal is sent from the destructor, so all occt
+  // instances are already destroyed
+  makeCurrent();
+  Handle(Aspect_DisplayConnection) display_connection =
+    m_viewer->Driver()->GetDisplayConnection(); // Make sure to not destroy connection yet
+
+  m_context->RemoveAll(false);
+  m_context.Nullify();
+  m_view->Remove();
+  m_view.Nullify();
+  m_viewer.Nullify();
+
+  display_connection.Nullify();
+  doneCurrent();
 }
 
 } // namespace cad_viewer

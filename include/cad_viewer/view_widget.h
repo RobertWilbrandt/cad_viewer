@@ -28,13 +28,12 @@ class ViewWidget : public QOpenGLWidget
   Q_OBJECT
 public:
   explicit ViewWidget(QWidget* parent = nullptr);
-  ~ViewWidget();
-
-  ViewWidget(const ViewWidget&)            = delete;
-  ViewWidget& operator=(const ViewWidget&) = delete;
 
   void initializeGL() override;
   void paintGL() override;
+
+private slots:
+  void cleanup();
 
 private:
   Handle(V3d_Viewer) m_viewer;
