@@ -14,9 +14,12 @@
 #ifndef CAD_VIEWER_VIEW_WIDGET_H_INCLUDED
 #define CAD_VIEWER_VIEW_WIDGET_H_INCLUDED
 
+#include <Aspect_VKey.hxx>
 #include <QOpenGLWidget>
 #include <Standard_Handle.hxx>
 #include <memory>
+
+class QMouseEvent;
 
 class V3d_View;
 class AIS_InteractiveContext;
@@ -37,7 +40,15 @@ public:
 
   void cleanup();
 
+protected:
+  void mousePressEvent(QMouseEvent* event) override;
+  void mouseReleaseEvent(QMouseEvent* event) override;
+  void mouseMoveEvent(QMouseEvent* event) override;
+
 private:
+  Aspect_VKeyMouse convert(Qt::MouseButtons buttons) const;
+  Aspect_VKeyFlags convert(Qt::KeyboardModifiers modifiers) const;
+
   Handle(V3d_View) m_view;
   Handle(AIS_InteractiveContext) m_context;
 

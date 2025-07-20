@@ -22,6 +22,7 @@
 #include <OpenGl_Context.hxx>
 #include <OpenGl_FrameBuffer.hxx>
 #include <OpenGl_GraphicDriver.hxx>
+#include <QMouseEvent>
 #include <QOpenGLContext>
 #include <QSurfaceFormat>
 #include <V3d_View.hxx>
@@ -149,6 +150,95 @@ void ViewWidget::cleanup()
   m_view.Nullify();
 
   m_context.Nullify();
+}
+
+void ViewWidget::mousePressEvent(QMouseEvent* event)
+{
+  QOpenGLWidget::mousePressEvent(event);
+  if (m_view.IsNull())
+  {
+    return;
+  }
+
+  const Graphic3d_Vec2i position{static_cast<int>(event->position().x()),
+                                 static_cast<int>(event->position().y())};
+  if (m_view_controller->UpdateMouseButtons(
+        position, convert(event->buttons()), convert(event->modifiers()), false))
+  {
+    update();
+  }
+}
+
+void ViewWidget::mouseReleaseEvent(QMouseEvent* event)
+{
+  QOpenGLWidget::mouseReleaseEvent(event);
+  if (m_view.IsNull())
+  {
+    return;
+  }
+
+  const Graphic3d_Vec2i position{static_cast<int>(event->position().x()),
+                                 static_cast<int>(event->position().y())};
+  if (m_view_controller->UpdateMouseButtons(
+        position, convert(event->buttons()), convert(event->modifiers()), false))
+  {
+    update();
+  }
+}
+
+void ViewWidget::mouseMoveEvent(QMouseEvent* event)
+{
+  QOpenGLWidget::mouseMoveEvent(event);
+  if (m_view.IsNull())
+  {
+    return;
+  }
+
+  const Graphic3d_Vec2i position{static_cast<int>(event->position().x()),
+                                 static_cast<int>(event->position().y())};
+  if (m_view_controller->UpdateMousePosition(
+        position, convert(event->buttons()), convert(event->modifiers()), false))
+  {
+    update();
+  }
+}
+
+Aspect_VKeyMouse ViewWidget::convert(Qt::MouseButtons buttons) const
+{
+  Aspect_VKeyMouse result = Aspect_VKeyMouse_NONE;
+  if ((buttons & Qt::LeftButton) != 0)
+  {
+    result |= Aspect_VKeyMouse_LeftButton;
+  }
+  if ((buttons & Qt::MiddleButton) != 0)
+  {
+    result |= Aspect_VKeyMouse_MiddleButton;
+  }
+  if ((buttons & Qt::RightButton) != 0)
+  {
+    result |= Aspect_VKeyMouse_RightButton;
+  }
+
+  return result;
+}
+
+Aspect_VKeyFlags ViewWidget::convert(Qt::KeyboardModifiers modifiers) const
+{
+  Aspect_VKeyFlags result = Aspect_VKeyFlags_NONE;
+  if ((modifiers & Qt::ShiftModifier) != 0)
+  {
+    result |= Aspect_VKeyFlags_SHIFT;
+  }
+  if ((modifiers & Qt::ControlModifier) != 0)
+  {
+    result |= Aspect_VKeyFlags_CTRL;
+  }
+  if ((modifiers & Qt::AltModifier) != 0)
+  {
+    result |= Aspect_VKeyFlags_ALT;
+  }
+
+  return result;
 }
 
 } // namespace cad_viewer
