@@ -9,6 +9,7 @@ target_sources(cad_viewer
     main.cpp
     main_window.cpp
     scene_view_widget.cpp
+    tool_bar.cpp
     view_widget.cpp
     widget_view_controller.cpp
 )
@@ -20,6 +21,7 @@ target_sources(cad_viewer
   FILES
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/main_window.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/scene_view_widget.h
+    ${CMAKE_SOURCE_DIR}/include/cad_viewer/tool_bar.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/view_widget.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/widget_view_controller.h
 )
