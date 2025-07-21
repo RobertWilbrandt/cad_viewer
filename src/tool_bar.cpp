@@ -40,15 +40,29 @@ void ToolBar::activateGridCbChanged(Qt::CheckState state)
   {
     case Qt::Checked:
       m_grid_type_selection_cb->setDisabled(false);
+      emit gridTypeSelectionChanged(
+        static_cast<SceneViewWidget::GridType>(m_grid_type_selection_cb->currentData().toInt()));
       break;
 
     case Qt::Unchecked:
       m_grid_type_selection_cb->setDisabled(true);
+      emit gridTypeSelectionChanged(SceneViewWidget::GridTypeNone);
       break;
 
     default:
       break;
   }
+}
+
+void ToolBar::gridTypeCbIndexChanged(int index)
+{
+  if (m_activate_grid_cb->checkState() != Qt::Checked)
+  {
+    return;
+  }
+
+  emit gridTypeSelectionChanged(
+    static_cast<SceneViewWidget::GridType>(m_grid_type_selection_cb->currentData().toInt()));
 }
 
 QWidget* ToolBar::createViewTab()
@@ -58,15 +72,21 @@ QWidget* ToolBar::createViewTab()
   auto* layout = new QHBoxLayout{tab};
   tab->setLayout(layout);
 
-  auto* activate_grid_cb = new QCheckBox{tab};
-  activate_grid_cb->setChecked(true);
+  m_activate_grid_cb = new QCheckBox{tab};
+  m_activate_grid_cb->setChecked(true);
   QObject::connect(
-    activate_grid_cb, &QCheckBox::checkStateChanged, this, &ToolBar::activateGridCbChanged);
-  layout->addWidget(activate_grid_cb);
+    m_activate_grid_cb, &QCheckBox::checkStateChanged, this, &ToolBar::activateGridCbChanged);
+  layout->addWidget(m_activate_grid_cb);
 
   m_grid_type_selection_cb = new QComboBox{tab};
-  m_grid_type_selection_cb->addItem("Grid");
-  m_grid_type_selection_cb->addItem("Circular");
+  m_grid_type_selection_cb->addItem(
+    "Grid", QVariant{static_cast<int>(SceneViewWidget::GridTypeRectangular)});
+  m_grid_type_selection_cb->addItem("Circular",
+                                    QVariant{static_cast<int>(SceneViewWidget::GridTypeCircular)});
+  QObject::connect(m_grid_type_selection_cb,
+                   &QComboBox::currentIndexChanged,
+                   this,
+                   &ToolBar::gridTypeCbIndexChanged);
   layout->addWidget(m_grid_type_selection_cb);
 
   return tab;

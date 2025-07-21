@@ -29,8 +29,24 @@ class ViewWidget;
 class SceneViewWidget : public QWidget
 {
   Q_OBJECT
+
+  Q_PROPERTY(GridType gridType READ gridType WRITE setGridType)
 public:
   explicit SceneViewWidget(QWidget* parent = nullptr);
+
+  enum GridType
+  {
+    GridTypeNone,
+    GridTypeRectangular,
+    GridTypeCircular
+  };
+  Q_ENUM(GridType);
+
+  GridType gridType() const;
+  void setGridType(GridType grid_type);
+
+signals:
+  void updateRequested();
 
 public slots:
   void cleanup();

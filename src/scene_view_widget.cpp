@@ -41,7 +41,7 @@ SceneViewWidget::SceneViewWidget(QWidget* parent)
   m_viewer->SetDefaultBackgroundColor(Quantity_NOC_LIGHTGRAY);
   m_viewer->SetDefaultLights();
   m_viewer->SetLightOn();
-  m_viewer->ActivateGrid(Aspect_GT_Circular, Aspect_GDM_Lines);
+  m_viewer->ActivateGrid(Aspect_GT_Rectangular, Aspect_GDM_Lines);
 
   m_context = new AIS_InteractiveContext{m_viewer};
 
@@ -49,6 +49,11 @@ SceneViewWidget::SceneViewWidget(QWidget* parent)
   m_view->SetImmediateUpdate(false);
 
   m_view_widget = new ViewWidget{m_view, m_context};
+  QObject::connect(this,
+                   &SceneViewWidget::updateRequested,
+                   m_view_widget,
+                   &ViewWidget::updateView,
+                   Qt::DirectConnection);
 
   auto* layout = new QVBoxLayout{this};
   layout->setContentsMargins(0, 0, 0, 0);
@@ -63,6 +68,46 @@ SceneViewWidget::SceneViewWidget(QWidget* parent)
                    this,
                    &SceneViewWidget::cleanup,
                    Qt::DirectConnection);
+}
+
+SceneViewWidget::GridType SceneViewWidget::gridType() const
+{
+  if (m_viewer.IsNull())
+  {
+    return GridTypeNone;
+  }
+
+  Handle(Aspect_Grid) grid = m_viewer->Grid(false);
+  if (grid.IsNull())
+  {
+    return GridTypeNone;
+  }
+
+  return m_viewer->GridType() == Aspect_GT_Rectangular ? GridTypeRectangular : GridTypeCircular;
+}
+
+void SceneViewWidget::setGridType(GridType grid_type)
+{
+  if (m_viewer.IsNull())
+  {
+    return;
+  }
+
+  switch (grid_type)
+  {
+    case GridTypeNone:
+      m_viewer->DeactivateGrid();
+      break;
+    case GridTypeRectangular:
+      m_viewer->ActivateGrid(Aspect_GT_Rectangular, Aspect_GDM_Lines);
+      break;
+    case GridTypeCircular:
+      m_viewer->ActivateGrid(Aspect_GT_Circular, Aspect_GDM_Lines);
+      break;
+  }
+
+  m_viewer->Invalidate();
+  emit updateRequested();
 }
 
 void SceneViewWidget::cleanup()

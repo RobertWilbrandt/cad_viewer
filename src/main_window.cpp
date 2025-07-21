@@ -34,6 +34,8 @@ MainWindow::MainWindow(QWidget* parent)
 
   auto* scene_view_widget = new SceneViewWidget{this};
   setCentralWidget(scene_view_widget);
+  QObject::connect(
+    tool_bar, &ToolBar::gridTypeSelectionChanged, scene_view_widget, &SceneViewWidget::setGridType);
 
   QObject::connect(this,
                    &MainWindow::closeRequestReceived,
