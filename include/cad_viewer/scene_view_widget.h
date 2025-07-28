@@ -16,6 +16,7 @@
 
 #include <QWidget>
 #include <Standard_Handle.hxx>
+#include <memory>
 
 class V3d_Viewer;
 class V3d_View;
@@ -24,6 +25,7 @@ class AIS_ViewCube;
 
 namespace cad_viewer {
 
+class Scene;
 class ViewWidget;
 
 class SceneViewWidget : public QWidget
@@ -45,6 +47,9 @@ public:
   GridType gridType() const;
   void setGridType(GridType grid_type);
 
+  [[nodiscard]] Scene& scene();
+  [[nodiscard]] const Scene& scene() const;
+
 signals:
   void updateRequested();
 
@@ -57,6 +62,8 @@ private:
   Handle(V3d_Viewer) m_viewer;
   Handle(V3d_View) m_view;
   Handle(AIS_InteractiveContext) m_context;
+
+  std::shared_ptr<Scene> m_scene;
 
   Handle(AIS_ViewCube) m_view_cube;
 

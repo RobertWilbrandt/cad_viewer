@@ -13,6 +13,7 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/scene_view_widget.h"
 
+#include "cad_viewer/scene.h"
 #include "cad_viewer/view_widget.h"
 #include "cad_viewer/widget_view_controller.h"
 
@@ -44,6 +45,7 @@ SceneViewWidget::SceneViewWidget(QWidget* parent)
   m_viewer->ActivateGrid(Aspect_GT_Rectangular, Aspect_GDM_Lines);
 
   m_context = new AIS_InteractiveContext{m_viewer};
+  m_scene   = std::make_shared<Scene>(m_context, this);
 
   m_view = m_viewer->CreateView();
   m_view->SetImmediateUpdate(false);
@@ -108,6 +110,16 @@ void SceneViewWidget::setGridType(GridType grid_type)
 
   m_viewer->Invalidate();
   emit updateRequested();
+}
+
+Scene& SceneViewWidget::scene()
+{
+  return *m_scene;
+}
+
+const Scene& SceneViewWidget::scene() const
+{
+  return *m_scene;
 }
 
 void SceneViewWidget::cleanup()
