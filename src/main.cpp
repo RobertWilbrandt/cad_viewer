@@ -11,6 +11,7 @@
  *
  */
 //----------------------------------------------------------------------
+#include "cad_viewer/graphic_driver.h"
 #include "cad_viewer/main_window.h"
 
 #include <QApplication>
@@ -20,6 +21,8 @@ using namespace cad_viewer;
 
 int main(int argc, char* argv[])
 {
+  GraphicDriver graphic_driver{};
+
   QApplication app{argc, argv};
 
   QSurfaceFormat format{};
@@ -28,7 +31,7 @@ int main(int argc, char* argv[])
   format.setProfile(QSurfaceFormat::CompatibilityProfile);
   QSurfaceFormat::setDefaultFormat(format);
 
-  MainWindow window{};
+  MainWindow window{&graphic_driver};
   window.show();
 
   return app.exec();

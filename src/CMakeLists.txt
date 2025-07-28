@@ -6,6 +6,7 @@ qt_add_executable(cad_viewer)
 target_sources(cad_viewer
   PRIVATE
     asan.cpp
+    graphic_driver.cpp
     main.cpp
     main_window.cpp
     scene.cpp
@@ -20,6 +21,7 @@ target_sources(cad_viewer
   TYPE HEADERS
   BASE_DIRS ${CMAKE_SOURCE_DIR}/include
   FILES
+    ${CMAKE_SOURCE_DIR}/include/cad_viewer/graphic_driver.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/main_window.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/scene.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/scene_view_widget.h

@@ -13,6 +13,7 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/scene_view_widget.h"
 
+#include "cad_viewer/graphic_driver.h"
 #include "cad_viewer/scene.h"
 #include "cad_viewer/view_widget.h"
 #include "cad_viewer/widget_view_controller.h"
@@ -29,16 +30,10 @@
 
 namespace cad_viewer {
 
-SceneViewWidget::SceneViewWidget(QWidget* parent)
+SceneViewWidget::SceneViewWidget(GraphicDriver* graphic_driver, QWidget* parent)
   : QWidget{parent}
 {
-  Handle(Aspect_DisplayConnection) display_connection = new Aspect_DisplayConnection{};
-  Handle(OpenGl_GraphicDriver) graphic_driver = new OpenGl_GraphicDriver{display_connection, false};
-  graphic_driver->ChangeOptions().buffersNoSwap      = true;  // QOpenGLWidget handles buffer swap
-  graphic_driver->ChangeOptions().buffersOpaqueAlpha = true;  // Don't write to alpha channel
-  graphic_driver->ChangeOptions().useSystemBuffer    = false; // Always use offscreen FBO
-
-  m_viewer = new V3d_Viewer{graphic_driver};
+  m_viewer = new V3d_Viewer{graphic_driver->driver()};
   m_viewer->SetDefaultBackgroundColor(Quantity_NOC_LIGHTGRAY);
   m_viewer->SetDefaultLights();
   m_viewer->SetLightOn();

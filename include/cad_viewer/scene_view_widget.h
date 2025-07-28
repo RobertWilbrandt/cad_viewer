@@ -27,6 +27,7 @@ namespace cad_viewer {
 
 class Scene;
 class ViewWidget;
+class GraphicDriver;
 
 class SceneViewWidget : public QWidget
 {
@@ -34,7 +35,7 @@ class SceneViewWidget : public QWidget
 
   Q_PROPERTY(GridType gridType READ gridType WRITE setGridType)
 public:
-  explicit SceneViewWidget(QWidget* parent = nullptr);
+  explicit SceneViewWidget(GraphicDriver* graphic_driver, QWidget* parent = nullptr);
 
   enum GridType
   {

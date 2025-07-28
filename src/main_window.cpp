@@ -24,7 +24,7 @@
 
 namespace cad_viewer {
 
-MainWindow::MainWindow(QWidget* parent)
+MainWindow::MainWindow(GraphicDriver* graphic_driver, QWidget* parent)
   : QMainWindow{parent}
 {
   createMenus();
@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget* parent)
   auto* tool_bar = new ToolBar{this};
   addToolBar(Qt::TopToolBarArea, tool_bar);
 
-  auto* scene_view_widget = new SceneViewWidget{this};
+  auto* scene_view_widget = new SceneViewWidget{graphic_driver, this};
   setCentralWidget(scene_view_widget);
   QObject::connect(
     tool_bar, &ToolBar::gridTypeSelectionChanged, scene_view_widget, &SceneViewWidget::setGridType);

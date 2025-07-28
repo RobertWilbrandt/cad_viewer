@@ -20,11 +20,13 @@ class QCloseEvent;
 
 namespace cad_viewer {
 
+class GraphicDriver;
+
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
 public:
-  explicit MainWindow(QWidget* parent = nullptr);
+  explicit MainWindow(GraphicDriver* graphic_driver, QWidget* parent = nullptr);
 
 signals:
   void closeRequestReceived();
@@ -33,6 +35,8 @@ protected:
   void closeEvent(QCloseEvent* event) override;
 
 private:
+  GraphicDriver* m_graphic_driver;
+
   void createMenus();
 
 private slots:
