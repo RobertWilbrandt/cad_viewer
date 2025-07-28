@@ -15,6 +15,7 @@
 
 #include "cad_viewer/scene_view_widget.h"
 #include "cad_viewer/tool_bar.h"
+#include "cad_viewer/viewer_config.h"
 
 #include <QAction>
 #include <QCoreApplication>
@@ -29,13 +30,19 @@ MainWindow::MainWindow(GraphicDriver* graphic_driver, QWidget* parent)
 {
   createMenus();
 
+  auto* viewer_config = new ViewerConfig{this};
+
   auto* tool_bar = new ToolBar{this};
+  QObject::connect(
+    tool_bar, &ToolBar::gridTypeSelectionChanged, viewer_config, &ViewerConfig::setGridType);
   addToolBar(Qt::TopToolBarArea, tool_bar);
 
   auto* scene_view_widget = new SceneViewWidget{graphic_driver, this};
   setCentralWidget(scene_view_widget);
-  QObject::connect(
-    tool_bar, &ToolBar::gridTypeSelectionChanged, scene_view_widget, &SceneViewWidget::setGridType);
+  QObject::connect(viewer_config,
+                   &ViewerConfig::gridTypeChanged,
+                   scene_view_widget,
+                   &SceneViewWidget::setGridType);
 
   QObject::connect(this,
                    &MainWindow::closeRequestReceived,

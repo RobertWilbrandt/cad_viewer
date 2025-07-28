@@ -14,6 +14,8 @@
 #ifndef CAD_VIEWER_SCENE_VIEW_WIDGET_H_INCLUDED
 #define CAD_VIEWER_SCENE_VIEW_WIDGET_H_INCLUDED
 
+#include "viewer_config.h"
+
 #include <QWidget>
 #include <Standard_Handle.hxx>
 #include <memory>
@@ -32,21 +34,8 @@ class GraphicDriver;
 class SceneViewWidget : public QWidget
 {
   Q_OBJECT
-
-  Q_PROPERTY(GridType gridType READ gridType WRITE setGridType)
 public:
   explicit SceneViewWidget(GraphicDriver* graphic_driver, QWidget* parent = nullptr);
-
-  enum GridType
-  {
-    GridTypeNone,
-    GridTypeRectangular,
-    GridTypeCircular
-  };
-  Q_ENUM(GridType);
-
-  GridType gridType() const;
-  void setGridType(GridType grid_type);
 
   [[nodiscard]] Scene& scene();
   [[nodiscard]] const Scene& scene() const;
@@ -55,6 +44,8 @@ signals:
   void updateRequested();
 
 public slots:
+  void setGridType(ViewerConfig::GridType grid_type);
+
   void cleanup();
 
 private:

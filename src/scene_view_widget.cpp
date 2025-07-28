@@ -67,23 +67,7 @@ SceneViewWidget::SceneViewWidget(GraphicDriver* graphic_driver, QWidget* parent)
                    Qt::DirectConnection);
 }
 
-SceneViewWidget::GridType SceneViewWidget::gridType() const
-{
-  if (m_viewer.IsNull())
-  {
-    return GridTypeNone;
-  }
-
-  Handle(Aspect_Grid) grid = m_viewer->Grid(false);
-  if (grid.IsNull())
-  {
-    return GridTypeNone;
-  }
-
-  return m_viewer->GridType() == Aspect_GT_Rectangular ? GridTypeRectangular : GridTypeCircular;
-}
-
-void SceneViewWidget::setGridType(GridType grid_type)
+void SceneViewWidget::setGridType(ViewerConfig::GridType grid_type)
 {
   if (m_viewer.IsNull())
   {
@@ -92,13 +76,13 @@ void SceneViewWidget::setGridType(GridType grid_type)
 
   switch (grid_type)
   {
-    case GridTypeNone:
+    case ViewerConfig::GridTypeNone:
       m_viewer->DeactivateGrid();
       break;
-    case GridTypeRectangular:
+    case ViewerConfig::GridTypeRectangular:
       m_viewer->ActivateGrid(Aspect_GT_Rectangular, Aspect_GDM_Lines);
       break;
-    case GridTypeCircular:
+    case ViewerConfig::GridTypeCircular:
       m_viewer->ActivateGrid(Aspect_GT_Circular, Aspect_GDM_Lines);
       break;
   }

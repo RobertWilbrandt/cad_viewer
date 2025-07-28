@@ -14,7 +14,7 @@
 #ifndef CAD_VIEWER_TOOL_BAR_H_INCLUDED
 #define CAD_VIEWER_TOOL_BAR_H_INCLUDED
 
-#include "scene_view_widget.h"
+#include "viewer_config.h"
 
 #include <QToolBar>
 
@@ -30,7 +30,7 @@ public:
   explicit ToolBar(QWidget* parent = nullptr);
 
 signals:
-  void gridTypeSelectionChanged(SceneViewWidget::GridType grid_type);
+  void gridTypeSelectionChanged(ViewerConfig::GridType grid_type);
 
 private slots:
   void activateGridCbChanged(Qt::CheckState state);
