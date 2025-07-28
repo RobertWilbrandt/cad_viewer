@@ -35,7 +35,9 @@ class SceneViewer : public QObject
 {
   Q_OBJECT
 public:
-  explicit SceneViewer(GraphicDriver* graphic_driver, QObject* parent = nullptr);
+  explicit SceneViewer(GraphicDriver* graphic_driver,
+                       const ViewerConfig* config,
+                       QObject* parent = nullptr);
 
   SceneViewWidget* createView(QWidget* parent = nullptr);
 

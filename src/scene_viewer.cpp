@@ -25,17 +25,30 @@
 
 namespace cad_viewer {
 
-SceneViewer::SceneViewer(GraphicDriver* graphic_driver, QObject* parent)
+SceneViewer::SceneViewer(GraphicDriver* graphic_driver, const ViewerConfig* config, QObject* parent)
   : QObject{parent}
 {
   m_viewer = new V3d_Viewer{graphic_driver->driver()};
   m_viewer->SetDefaultBackgroundColor(Quantity_NOC_LIGHTGRAY);
   m_viewer->SetDefaultLights();
   m_viewer->SetLightOn();
-  m_viewer->ActivateGrid(Aspect_GT_Rectangular, Aspect_GDM_Lines);
+
+  switch (config->gridType())
+  {
+    case ViewerConfig::GridTypeRectangular:
+      m_viewer->ActivateGrid(Aspect_GT_Rectangular, Aspect_GDM_Lines);
+      break;
+    case ViewerConfig::GridTypeCircular:
+      m_viewer->ActivateGrid(Aspect_GT_Circular, Aspect_GDM_Lines);
+      break;
+    default:
+      break;
+  }
 
   m_context = new AIS_InteractiveContext{m_viewer};
   m_scene   = std::make_shared<Scene>(m_context, this);
+
+  QObject::connect(config, &ViewerConfig::gridTypeChanged, this, &SceneViewer::setGridType);
 
   QObject::connect(QCoreApplication::instance(),
                    &QCoreApplication::aboutToQuit,

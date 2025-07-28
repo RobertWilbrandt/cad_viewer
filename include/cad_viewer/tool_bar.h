@@ -27,7 +27,7 @@ class ToolBar : public QToolBar
 {
   Q_OBJECT
 public:
-  explicit ToolBar(QWidget* parent = nullptr);
+  explicit ToolBar(const ViewerConfig* viewer_config, QWidget* parent = nullptr);
 
 signals:
   void gridTypeSelectionChanged(ViewerConfig::GridType grid_type);
@@ -37,7 +37,7 @@ private slots:
   void gridTypeCbIndexChanged(int index);
 
 private:
-  QWidget* createViewTab();
+  QWidget* createViewTab(const ViewerConfig* viewer_config);
 
   QCheckBox* m_activate_grid_cb;
   QComboBox* m_grid_type_selection_cb;

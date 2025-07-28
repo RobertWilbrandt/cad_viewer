@@ -33,15 +33,10 @@ MainWindow::MainWindow(GraphicDriver* graphic_driver, QWidget* parent)
 
   auto* viewer_config = new ViewerConfig{this};
 
-  auto* tool_bar = new ToolBar{this};
-  QObject::connect(
-    tool_bar, &ToolBar::gridTypeSelectionChanged, viewer_config, &ViewerConfig::setGridType);
+  auto* tool_bar = new ToolBar{viewer_config, this};
   addToolBar(Qt::TopToolBarArea, tool_bar);
 
-  auto* scene_viewer = new SceneViewer{graphic_driver, this};
-  QObject::connect(
-    viewer_config, &ViewerConfig::gridTypeChanged, scene_viewer, &SceneViewer::setGridType);
-
+  auto* scene_viewer      = new SceneViewer{graphic_driver, viewer_config, this};
   auto* scene_view_widget = scene_viewer->createView();
   setCentralWidget(scene_view_widget);
 
