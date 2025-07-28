@@ -150,11 +150,6 @@ Handle(AIS_AnimationCamera) ViewWidget::cameraAnimation() const
   return m_view_controller->ViewAnimation();
 }
 
-void ViewWidget::updateView()
-{
-  update();
-}
-
 void ViewWidget::cleanup()
 {
   m_view->Remove();

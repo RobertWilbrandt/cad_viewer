@@ -44,9 +44,6 @@ public:
 
   void cleanup();
 
-public slots:
-  void updateView();
-
 protected:
   void mousePressEvent(QMouseEvent* event) override;
   void mouseReleaseEvent(QMouseEvent* event) override;

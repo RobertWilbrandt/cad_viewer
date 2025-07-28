@@ -18,45 +18,34 @@
 
 #include <QWidget>
 #include <Standard_Handle.hxx>
-#include <memory>
 
-class V3d_Viewer;
 class V3d_View;
 class AIS_InteractiveContext;
 class AIS_ViewCube;
 
 namespace cad_viewer {
 
-class Scene;
 class ViewWidget;
-class GraphicDriver;
 
 class SceneViewWidget : public QWidget
 {
   Q_OBJECT
 public:
-  explicit SceneViewWidget(GraphicDriver* graphic_driver, QWidget* parent = nullptr);
+  explicit SceneViewWidget(Handle(V3d_View) view,
+                           Handle(AIS_InteractiveContext) context,
+                           QWidget* parent = nullptr);
+  ~SceneViewWidget();
 
-  [[nodiscard]] Scene& scene();
-  [[nodiscard]] const Scene& scene() const;
-
-signals:
-  void updateRequested();
+  SceneViewWidget(const SceneViewWidget&)            = delete;
+  SceneViewWidget& operator=(const SceneViewWidget&) = delete;
 
 public slots:
-  void setGridType(ViewerConfig::GridType grid_type);
-
-  void cleanup();
+  void updateView();
 
 private:
   Handle(AIS_ViewCube) createDefaultViewCube() const;
 
-  Handle(V3d_Viewer) m_viewer;
   Handle(V3d_View) m_view;
-  Handle(AIS_InteractiveContext) m_context;
-
-  std::shared_ptr<Scene> m_scene;
-
   Handle(AIS_ViewCube) m_view_cube;
 
   ViewWidget* m_view_widget;

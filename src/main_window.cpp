@@ -14,6 +14,7 @@
 #include "cad_viewer/main_window.h"
 
 #include "cad_viewer/scene_view_widget.h"
+#include "cad_viewer/scene_viewer.h"
 #include "cad_viewer/tool_bar.h"
 #include "cad_viewer/viewer_config.h"
 
@@ -37,17 +38,17 @@ MainWindow::MainWindow(GraphicDriver* graphic_driver, QWidget* parent)
     tool_bar, &ToolBar::gridTypeSelectionChanged, viewer_config, &ViewerConfig::setGridType);
   addToolBar(Qt::TopToolBarArea, tool_bar);
 
-  auto* scene_view_widget = new SceneViewWidget{graphic_driver, this};
+  auto* scene_viewer = new SceneViewer{graphic_driver, this};
+  QObject::connect(
+    viewer_config, &ViewerConfig::gridTypeChanged, scene_viewer, &SceneViewer::setGridType);
+
+  auto* scene_view_widget = scene_viewer->createView();
   setCentralWidget(scene_view_widget);
-  QObject::connect(viewer_config,
-                   &ViewerConfig::gridTypeChanged,
-                   scene_view_widget,
-                   &SceneViewWidget::setGridType);
 
   QObject::connect(this,
                    &MainWindow::closeRequestReceived,
-                   scene_view_widget,
-                   &SceneViewWidget::cleanup,
+                   scene_viewer,
+                   &SceneViewer::cleanup,
                    Qt::DirectConnection);
 }
 
