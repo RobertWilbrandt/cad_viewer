@@ -13,6 +13,7 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/widget_view_controller.h"
 
+#include <AIS_InteractiveContext.hxx>
 #include <QWidget>
 
 namespace cad_viewer {
@@ -31,6 +32,11 @@ void WidgetViewController::handleViewRedraw(const Handle(AIS_InteractiveContext)
   {
     m_widget->update();
   }
+}
+
+void WidgetViewController::OnSelectionChanged(const Handle(AIS_InteractiveContext) & context,
+                                              const Handle(V3d_View) & view)
+{
 }
 
 } // namespace cad_viewer

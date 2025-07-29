@@ -32,6 +32,9 @@ protected:
   void handleViewRedraw(const Handle(AIS_InteractiveContext) & context,
                         const Handle(V3d_View) & view) override;
 
+  void OnSelectionChanged(const Handle(AIS_InteractiveContext) & context,
+                          const Handle(V3d_View) & view) override;
+
 private:
   QWidget* m_widget;
 };

@@ -14,9 +14,10 @@
 #include "cad_viewer/scene.h"
 
 #include <AIS_InteractiveContext.hxx>
-#include <AIS_Plane.hxx>
+#include <AIS_Shape.hxx>
+#include <BRepBuilderAPI_MakeFace.hxx>
 #include <Geom_Plane.hxx>
-#include <Prs3d_LineAspect.hxx>
+#include <TopoDS_Face.hxx>
 #include <gp_Ax3.hxx>
 
 namespace cad_viewer {
@@ -25,38 +26,30 @@ Scene::Scene(Handle(AIS_InteractiveContext) context, QObject* parent)
   : QObject{parent}
   , m_context{std::move(context)}
 {
-  Handle(Prs3d_Drawer) drawer = new Prs3d_Drawer{};
-  drawer->SetupOwnDefaults();
-
-  m_context->Display(
-    createConstructionPlane(gp_Pnt{0, 0, 0}, gp_Dir{1, 0, 0}, gp_Dir{0, 1, 0}, drawer),
-    AIS_Shaded,
-    0,
-    false);
-  m_context->Display(
-    createConstructionPlane(gp_Pnt{0, 0, 0}, gp_Dir{0, 1, 0}, gp_Dir{-1, 0, 0}, drawer),
-    AIS_Shaded,
-    0,
-    false);
-  m_context->Display(
-    createConstructionPlane(gp_Pnt{0, 0, 0}, gp_Dir{0, 0, 1}, gp_Dir{0, 1, 0}, drawer),
-    AIS_Shaded,
-    0,
-    false);
+  m_context->Display(createConstructionPlane(gp_Pnt{0, 0, 0}, gp_Dir{1, 0, 0}, gp_Dir{0, 1, 0}),
+                     AIS_Shaded,
+                     0,
+                     false);
+  m_context->Display(createConstructionPlane(gp_Pnt{0, 0, 0}, gp_Dir{0, 1, 0}, gp_Dir{-1, 0, 0}),
+                     AIS_Shaded,
+                     0,
+                     false);
+  m_context->Display(createConstructionPlane(gp_Pnt{0, 0, 0}, gp_Dir{0, 0, 1}, gp_Dir{0, 1, 0}),
+                     AIS_Shaded,
+                     0,
+                     false);
 }
 
-Handle(AIS_Plane) Scene::createConstructionPlane(const gp_Pnt& position,
+Handle(AIS_Shape) Scene::createConstructionPlane(const gp_Pnt& position,
                                                  const gp_Dir& dir,
-                                                 const gp_Dir& x_dir,
-                                                 const Handle(Prs3d_Drawer) & drawer) const
+                                                 const gp_Dir& x_dir) const
 {
-  Handle(Geom_Plane) geom_plane = new Geom_Plane{gp_Ax3{position, dir, x_dir}};
-  Handle(AIS_Plane) plane       = new AIS_Plane{geom_plane};
-  plane->SetAttributes(drawer);
+  TopoDS_Face face =
+    BRepBuilderAPI_MakeFace{gp_Pln{gp_Ax3{position, dir, x_dir}}, -50, 50, -50, 50};
+  Handle(AIS_Shape) plane = new AIS_Shape{face};
 
   plane->SetColor(Quantity_NOC_RED);
   plane->SetTransparency(0.5);
-  plane->SetSize(100);
 
   return plane;
 }
