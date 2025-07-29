@@ -16,12 +16,16 @@
 
 #include <AIS_ViewController.hxx>
 #include <Standard_Handle.hxx>
+#include <vector>
 
 class QWidget;
+class AIS_InteractiveObject;
 class AIS_InteractiveContext;
 class V3d_View;
 
 namespace cad_viewer {
+
+class ObjectOwner;
 
 class WidgetViewController : public AIS_ViewController
 {
@@ -37,6 +41,8 @@ protected:
 
 private:
   QWidget* m_widget;
+
+  std::vector<Handle(ObjectOwner)> m_cur_selected;
 };
 
 } // namespace cad_viewer

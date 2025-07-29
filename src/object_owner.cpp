@@ -13,6 +13,8 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/object_owner.h"
 
+#include "cad_viewer/scene_object.h"
+
 namespace cad_viewer {
 
 IMPLEMENT_STANDARD_RTTIEXT(ObjectOwner, Standard_Transient)
@@ -20,6 +22,11 @@ IMPLEMENT_STANDARD_RTTIEXT(ObjectOwner, Standard_Transient)
 ObjectOwner::ObjectOwner(SceneObject* scene_object)
   : m_scene_object{scene_object}
 {
+}
+
+void ObjectOwner::setSelected(bool value)
+{
+  m_scene_object->setSelected(value);
 }
 
 } // namespace cad_viewer

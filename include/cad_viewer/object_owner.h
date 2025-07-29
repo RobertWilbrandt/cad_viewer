@@ -29,6 +29,8 @@ public:
   explicit ObjectOwner(SceneObject* scene_object);
   virtual ~ObjectOwner() = default;
 
+  void setSelected(bool value);
+
 private:
   SceneObject* m_scene_object;
 };

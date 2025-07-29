@@ -21,11 +21,20 @@ namespace cad_viewer {
 class SceneObject : public QObject
 {
   Q_OBJECT
+
+  Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged)
 public:
   explicit SceneObject(QObject* parent = nullptr);
   virtual ~SceneObject() = default;
 
+  [[nodiscard]] bool selected() const;
+  void setSelected(bool selected);
+
+signals:
+  void selectedChanged(bool selected);
+
 private:
+  bool m_selected = false;
 };
 
 } // namespace cad_viewer
