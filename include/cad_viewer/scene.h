@@ -18,6 +18,10 @@
 #include <Standard_Handle.hxx>
 
 class AIS_InteractiveContext;
+class AIS_Plane;
+class gp_Pnt;
+class gp_Dir;
+class Prs3d_Drawer;
 
 namespace cad_viewer {
 
@@ -28,6 +32,11 @@ public:
   explicit Scene(Handle(AIS_InteractiveContext) context, QObject* parent = nullptr);
 
 private:
+  Handle(AIS_Plane) createConstructionPlane(const gp_Pnt& position,
+                                            const gp_Dir& dir,
+                                            const gp_Dir& x_dir,
+                                            const Handle(Prs3d_Drawer) & drawer) const;
+
   Handle(AIS_InteractiveContext) m_context;
 };
 
