@@ -13,6 +13,9 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/scene.h"
 
+#include "cad_viewer/object_owner.h"
+#include "cad_viewer/scene_object.h"
+
 #include <AIS_InteractiveContext.hxx>
 #include <AIS_Shape.hxx>
 #include <BRepBuilderAPI_MakeFace.hxx>
@@ -42,11 +45,15 @@ Scene::Scene(Handle(AIS_InteractiveContext) context, QObject* parent)
 
 Handle(AIS_Shape) Scene::createConstructionPlane(const gp_Pnt& position,
                                                  const gp_Dir& dir,
-                                                 const gp_Dir& x_dir) const
+                                                 const gp_Dir& x_dir)
 {
   TopoDS_Face face =
     BRepBuilderAPI_MakeFace{gp_Pln{gp_Ax3{position, dir, x_dir}}, -50, 50, -50, 50};
   Handle(AIS_Shape) plane = new AIS_Shape{face};
+
+  auto* scene_object        = new SceneObject{this};
+  Handle(ObjectOwner) owner = new ObjectOwner{scene_object};
+  plane->SetOwner(owner);
 
   plane->SetColor(Quantity_NOC_RED);
   plane->SetTransparency(0.5);
