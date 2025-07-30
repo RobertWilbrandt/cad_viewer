@@ -13,6 +13,7 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/main_window.h"
 
+#include "cad_viewer/scene.h"
 #include "cad_viewer/scene_browser.h"
 #include "cad_viewer/scene_view_widget.h"
 #include "cad_viewer/scene_viewer.h"
@@ -42,7 +43,7 @@ MainWindow::MainWindow(GraphicDriver* graphic_driver, QWidget* parent)
   auto* scene_view_widget = scene_viewer->createView();
   setCentralWidget(scene_view_widget);
 
-  auto* scene_browser             = new SceneBrowser{this};
+  auto* scene_browser             = new SceneBrowser{scene_viewer->scene(), this};
   auto* scene_browser_dock_widget = new QDockWidget{this};
   scene_browser_dock_widget->setWidget(scene_browser);
   addDockWidget(Qt::LeftDockWidgetArea, scene_browser_dock_widget);

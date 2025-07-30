@@ -17,16 +17,20 @@
 #include <QAbstractItemModel>
 #include <QModelIndex>
 #include <QTreeView>
+#include <vector>
 
 class QWidget;
 
 namespace cad_viewer {
 
+class Scene;
+class SceneObject;
+
 class SceneBrowserModel : public QAbstractItemModel
 {
   Q_OBJECT
 public:
-  explicit SceneBrowserModel(QObject* parent = nullptr);
+  explicit SceneBrowserModel(const Scene& scene, QObject* parent = nullptr);
 
   QModelIndex index(int row, int column, const QModelIndex& parent) const override;
   QModelIndex parent(const QModelIndex& index) const override;
@@ -36,13 +40,17 @@ public:
 
   QVariant data(const QModelIndex& index, int role) const override;
 
+public slots:
+  void addObject(SceneObject* object);
+
 private:
+  std::vector<SceneObject*> m_construction_objects;
 };
 
 class SceneBrowser : public QTreeView
 {
 public:
-  explicit SceneBrowser(QWidget* parent = nullptr);
+  explicit SceneBrowser(const Scene& scene, QWidget* parent = nullptr);
 
 private:
 };

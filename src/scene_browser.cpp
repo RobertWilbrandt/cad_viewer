@@ -13,11 +13,15 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/scene_browser.h"
 
+#include "cad_viewer/scene.h"
+#include "cad_viewer/scene_object.h"
+
 namespace cad_viewer {
 
-SceneBrowserModel::SceneBrowserModel(QObject* parent)
+SceneBrowserModel::SceneBrowserModel(const Scene& scene, QObject* parent)
   : QAbstractItemModel{parent}
 {
+  QObject::connect(&scene, &Scene::objectAdded, this, &SceneBrowserModel::addObject);
 }
 
 QModelIndex SceneBrowserModel::index(int row, int column, const QModelIndex& parent) const
@@ -77,10 +81,12 @@ QVariant SceneBrowserModel::data(const QModelIndex& index, int role) const
   }
 }
 
-SceneBrowser::SceneBrowser(QWidget* parent)
+void SceneBrowserModel::addObject(SceneObject* object) {}
+
+SceneBrowser::SceneBrowser(const Scene& scene, QWidget* parent)
   : QTreeView{parent}
 {
-  auto* model = new SceneBrowserModel{this};
+  auto* model = new SceneBrowserModel{scene, this};
   setModel(model);
 
   setHeaderHidden(true);

@@ -41,6 +41,8 @@ public:
 
   SceneViewWidget* createView(QWidget* parent = nullptr);
 
+  [[nodiscard]] Scene& scene() const;
+
 signals:
   void viewUpdateRequested();
 

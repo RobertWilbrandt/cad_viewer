@@ -25,11 +25,16 @@ class Prs3d_Drawer;
 
 namespace cad_viewer {
 
+class SceneObject;
+
 class Scene : public QObject
 {
   Q_OBJECT
 public:
   explicit Scene(Handle(AIS_InteractiveContext) context, QObject* parent = nullptr);
+
+signals:
+  void objectAdded(SceneObject* object);
 
 private:
   Handle(AIS_Shape) createConstructionPlane(const QString& name,

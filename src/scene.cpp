@@ -62,6 +62,7 @@ Handle(AIS_Shape) Scene::createConstructionPlane(const QString& name,
   plane->SetColor(Quantity_NOC_RED);
   plane->SetTransparency(0.5);
 
+  emit objectAdded(scene_object);
   return plane;
 }
 

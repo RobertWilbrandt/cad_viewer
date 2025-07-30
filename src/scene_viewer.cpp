@@ -69,6 +69,11 @@ SceneViewWidget* SceneViewer::createView(QWidget* parent)
   return view_widget;
 }
 
+Scene& SceneViewer::scene() const
+{
+  return *m_scene;
+}
+
 void SceneViewer::setGridType(ViewerConfig::GridType grid_type)
 {
   if (m_viewer.IsNull())
