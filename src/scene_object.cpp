@@ -13,13 +13,26 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/scene_object.h"
 
-#include <iostream>
-
 namespace cad_viewer {
 
-SceneObject::SceneObject(QObject* parent)
+SceneObject::SceneObject(QString name, QObject* parent)
   : QObject{parent}
+  , m_name{std::move(name)}
 {
+}
+
+const QString& SceneObject::name() const
+{
+  return m_name;
+}
+
+void SceneObject::setName(QString name)
+{
+  std::swap(name, m_name);
+  if (name != m_name)
+  {
+    emit nameChanged(m_name);
+  }
 }
 
 bool SceneObject::selected() const
@@ -29,11 +42,10 @@ bool SceneObject::selected() const
 
 void SceneObject::setSelected(bool selected)
 {
-  bool before_selected = m_selected;
-  m_selected           = selected;
-  if (selected != before_selected)
+  std::swap(selected, m_selected);
+  if (selected != m_selected)
   {
-    emit selectedChanged(selected);
+    emit selectedChanged(m_selected);
   }
 }
 

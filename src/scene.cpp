@@ -29,21 +29,25 @@ Scene::Scene(Handle(AIS_InteractiveContext) context, QObject* parent)
   : QObject{parent}
   , m_context{std::move(context)}
 {
-  m_context->Display(createConstructionPlane(gp_Pnt{0, 0, 0}, gp_Dir{1, 0, 0}, gp_Dir{0, 1, 0}),
-                     AIS_Shaded,
-                     0,
-                     false);
-  m_context->Display(createConstructionPlane(gp_Pnt{0, 0, 0}, gp_Dir{0, 1, 0}, gp_Dir{-1, 0, 0}),
-                     AIS_Shaded,
-                     0,
-                     false);
-  m_context->Display(createConstructionPlane(gp_Pnt{0, 0, 0}, gp_Dir{0, 0, 1}, gp_Dir{0, 1, 0}),
-                     AIS_Shaded,
-                     0,
-                     false);
+  m_context->Display(
+    createConstructionPlane("yz", gp_Pnt{0, 0, 0}, gp_Dir{1, 0, 0}, gp_Dir{0, 1, 0}),
+    AIS_Shaded,
+    0,
+    false);
+  m_context->Display(
+    createConstructionPlane("xz", gp_Pnt{0, 0, 0}, gp_Dir{0, 1, 0}, gp_Dir{-1, 0, 0}),
+    AIS_Shaded,
+    0,
+    false);
+  m_context->Display(
+    createConstructionPlane("xy", gp_Pnt{0, 0, 0}, gp_Dir{0, 0, 1}, gp_Dir{0, 1, 0}),
+    AIS_Shaded,
+    0,
+    false);
 }
 
-Handle(AIS_Shape) Scene::createConstructionPlane(const gp_Pnt& position,
+Handle(AIS_Shape) Scene::createConstructionPlane(const QString& name,
+                                                 const gp_Pnt& position,
                                                  const gp_Dir& dir,
                                                  const gp_Dir& x_dir)
 {
@@ -51,7 +55,7 @@ Handle(AIS_Shape) Scene::createConstructionPlane(const gp_Pnt& position,
     BRepBuilderAPI_MakeFace{gp_Pln{gp_Ax3{position, dir, x_dir}}, -50, 50, -50, 50};
   Handle(AIS_Shape) plane = new AIS_Shape{face};
 
-  auto* scene_object        = new SceneObject{this};
+  auto* scene_object        = new SceneObject{name, this};
   Handle(ObjectOwner) owner = new ObjectOwner{scene_object};
   plane->SetOwner(owner);
 

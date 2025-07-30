@@ -32,8 +32,10 @@ public:
   explicit Scene(Handle(AIS_InteractiveContext) context, QObject* parent = nullptr);
 
 private:
-  Handle(AIS_Shape)
-    createConstructionPlane(const gp_Pnt& position, const gp_Dir& dir, const gp_Dir& x_dir);
+  Handle(AIS_Shape) createConstructionPlane(const QString& name,
+                                            const gp_Pnt& position,
+                                            const gp_Dir& dir,
+                                            const gp_Dir& x_dir);
 
   Handle(AIS_InteractiveContext) m_context;
 };
