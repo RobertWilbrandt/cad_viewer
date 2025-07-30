@@ -55,7 +55,7 @@ Handle(AIS_Shape) Scene::createConstructionPlane(const QString& name,
     BRepBuilderAPI_MakeFace{gp_Pln{gp_Ax3{position, dir, x_dir}}, -50, 50, -50, 50};
   Handle(AIS_Shape) plane = new AIS_Shape{face};
 
-  auto* scene_object        = new SceneObject{name, this};
+  auto* scene_object        = new SceneObject{SceneObject::ObjectTypeConstruction, name, this};
   Handle(ObjectOwner) owner = new ObjectOwner{scene_object};
   plane->SetOwner(owner);
 

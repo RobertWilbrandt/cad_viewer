@@ -23,11 +23,20 @@ class SceneObject : public QObject
 {
   Q_OBJECT
 
-  Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged)
+  Q_PROPERTY(ObjectType object_type READ objectType)
   Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+  Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged)
 public:
-  explicit SceneObject(QString name, QObject* parent = nullptr);
+  enum ObjectType
+  {
+    ObjectTypeConstruction
+  };
+  Q_ENUM(ObjectType);
+
+  explicit SceneObject(ObjectType object_type, QString name, QObject* parent = nullptr);
   virtual ~SceneObject() = default;
+
+  [[nodiscard]] ObjectType objectType() const;
 
   [[nodiscard]] const QString& name() const;
   void setName(QString name);
@@ -41,6 +50,7 @@ signals:
   void selectedChanged(bool selected);
 
 private:
+  ObjectType m_object_type;
   QString m_name;
 
   bool m_selected = false;

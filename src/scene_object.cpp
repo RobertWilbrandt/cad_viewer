@@ -15,10 +15,16 @@
 
 namespace cad_viewer {
 
-SceneObject::SceneObject(QString name, QObject* parent)
+SceneObject::SceneObject(ObjectType object_type, QString name, QObject* parent)
   : QObject{parent}
+  , m_object_type{object_type}
   , m_name{std::move(name)}
 {
+}
+
+SceneObject::ObjectType SceneObject::objectType() const
+{
+  return m_object_type;
 }
 
 const QString& SceneObject::name() const
