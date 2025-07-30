@@ -13,6 +13,7 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/main_window.h"
 
+#include "cad_viewer/scene_browser.h"
 #include "cad_viewer/scene_view_widget.h"
 #include "cad_viewer/scene_viewer.h"
 #include "cad_viewer/tool_bar.h"
@@ -20,6 +21,7 @@
 
 #include <QAction>
 #include <QCoreApplication>
+#include <QDockWidget>
 #include <QIcon>
 #include <QMenuBar>
 #include <QVBoxLayout>
@@ -39,6 +41,11 @@ MainWindow::MainWindow(GraphicDriver* graphic_driver, QWidget* parent)
   auto* scene_viewer      = new SceneViewer{graphic_driver, viewer_config, this};
   auto* scene_view_widget = scene_viewer->createView();
   setCentralWidget(scene_view_widget);
+
+  auto* scene_browser             = new SceneBrowser{this};
+  auto* scene_browser_dock_widget = new QDockWidget{this};
+  scene_browser_dock_widget->setWidget(scene_browser);
+  addDockWidget(Qt::LeftDockWidgetArea, scene_browser_dock_widget);
 
   QObject::connect(this,
                    &MainWindow::closeRequestReceived,

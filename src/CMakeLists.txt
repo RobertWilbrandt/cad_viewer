@@ -11,6 +11,7 @@ target_sources(cad_viewer
     main_window.cpp
     object_owner.cpp
     scene.cpp
+    scene_browser.cpp
     scene_object.cpp
     scene_view_widget.cpp
     scene_viewer.cpp
@@ -29,6 +30,7 @@ target_sources(cad_viewer
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/main_window.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/object_owner.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/scene.h
+    ${CMAKE_SOURCE_DIR}/include/cad_viewer/scene_browser.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/scene_object.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/scene_view_widget.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/scene_viewer.h
