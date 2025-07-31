@@ -46,6 +46,28 @@ Scene::Scene(Handle(AIS_InteractiveContext) context, QObject* parent)
     false);
 }
 
+std::vector<SceneObject*> Scene::sceneObjects() const
+{
+  AIS_ListOfInteractive interactive_objects;
+  m_context->DisplayedObjects(interactive_objects);
+
+  std::vector<SceneObject*> result;
+  for (const auto& object : interactive_objects)
+  {
+    const auto owner = object->GetOwner();
+    if (owner.IsNull())
+    {
+      continue;
+    }
+    if (owner->IsKind(ObjectOwner::get_type_descriptor()))
+    {
+      result.push_back(Handle(ObjectOwner)::DownCast(owner)->sceneObject());
+    }
+  }
+
+  return result;
+}
+
 Handle(AIS_Shape) Scene::createConstructionPlane(const QString& name,
                                                  const gp_Pnt& position,
                                                  const gp_Dir& dir,

@@ -24,6 +24,11 @@ ObjectOwner::ObjectOwner(SceneObject* scene_object)
 {
 }
 
+SceneObject* ObjectOwner::sceneObject() const
+{
+  return m_scene_object;
+}
+
 void ObjectOwner::setSelected(bool value)
 {
   m_scene_object->setSelected(value);

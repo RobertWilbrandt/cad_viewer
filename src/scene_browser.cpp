@@ -22,6 +22,18 @@ SceneBrowserModel::SceneBrowserModel(const Scene& scene, QObject* parent)
   : QAbstractItemModel{parent}
 {
   QObject::connect(&scene, &Scene::objectAdded, this, &SceneBrowserModel::addObject);
+  for (auto* scene_object : scene.sceneObjects())
+  {
+    switch (scene_object->objectType())
+    {
+      case SceneObject::ObjectTypeConstruction:
+        m_construction_objects.push_back(scene_object);
+        break;
+
+      default:
+        break;
+    }
+  }
 }
 
 QModelIndex SceneBrowserModel::index(int row, int column, const QModelIndex& parent) const

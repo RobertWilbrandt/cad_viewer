@@ -16,6 +16,7 @@
 
 #include <QObject>
 #include <Standard_Handle.hxx>
+#include <vector>
 
 class AIS_InteractiveContext;
 class AIS_Shape;
@@ -32,6 +33,8 @@ class Scene : public QObject
   Q_OBJECT
 public:
   explicit Scene(Handle(AIS_InteractiveContext) context, QObject* parent = nullptr);
+
+  std::vector<SceneObject*> sceneObjects() const;
 
 signals:
   void objectAdded(SceneObject* object);
