@@ -45,7 +45,14 @@ QModelIndex SceneBrowserModel::index(int row, int column, const QModelIndex& par
 
   if (parent.isValid())
   {
-    return QModelIndex{};
+    switch (static_cast<SceneObject::ObjectType>(parent.row()))
+    {
+      case SceneObject::ObjectTypeConstruction:
+        return createIndex(row, column, m_construction_objects[static_cast<std::size_t>(row)]);
+
+      default:
+        return QModelIndex{};
+    }
   }
 
   if (row == 0)
@@ -58,6 +65,12 @@ QModelIndex SceneBrowserModel::index(int row, int column, const QModelIndex& par
 
 QModelIndex SceneBrowserModel::parent(const QModelIndex& index) const
 {
+  const void* data = index.constInternalPointer();
+  if (data != nullptr)
+  {
+    const auto* scene_object = static_cast<const SceneObject*>(data);
+    return createIndex(static_cast<int>(scene_object->objectType()), 0, nullptr);
+  }
   return QModelIndex{};
 }
 
@@ -65,7 +78,22 @@ int SceneBrowserModel::rowCount(const QModelIndex& parent) const
 {
   if (parent.isValid())
   {
-    return 0;
+    const void* ptr = parent.constInternalPointer();
+    if (ptr == nullptr)
+    {
+      switch (static_cast<SceneObject::ObjectType>(parent.row()))
+      {
+        case SceneObject::ObjectTypeConstruction:
+          return static_cast<int>(m_construction_objects.size());
+
+        default:
+          return 0;
+      }
+    }
+    else
+    {
+      return 0;
+    }
   }
 
   return 1;
@@ -83,10 +111,31 @@ QVariant SceneBrowserModel::data(const QModelIndex& index, int role) const
     return QVariant{};
   }
 
+  const void* ptr = index.constInternalPointer();
+  if (ptr == nullptr)
+  {
+    switch (role)
+    {
+      case Qt::DisplayRole:
+        switch (index.row())
+        {
+          case 0:
+            return QString::fromLocal8Bit("Construction");
+
+          default:
+            return QVariant{};
+        }
+
+      default:
+        return QVariant{};
+    }
+  }
+
+  const auto* scene_object = static_cast<const SceneObject*>(ptr);
   switch (role)
   {
     case Qt::DisplayRole:
-      return QString::fromLocal8Bit("Test");
+      return scene_object->name();
 
     default:
       return QVariant{};
