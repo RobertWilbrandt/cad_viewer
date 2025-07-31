@@ -151,6 +151,7 @@ SceneBrowser::SceneBrowser(const Scene& scene, QWidget* parent)
   setModel(model);
 
   setHeaderHidden(true);
+  expandAll();
 }
 
 } // namespace cad_viewer
