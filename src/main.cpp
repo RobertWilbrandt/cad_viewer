@@ -11,10 +11,10 @@
  *
  */
 //----------------------------------------------------------------------
+#include "cad_viewer/application.h"
 #include "cad_viewer/graphic_driver.h"
 #include "cad_viewer/main_window.h"
 
-#include <QApplication>
 #include <QSurfaceFormat>
 
 using namespace cad_viewer;
@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 {
   GraphicDriver graphic_driver{};
 
-  QApplication app{argc, argv};
+  Application app{argc, argv};
 
   QSurfaceFormat format{};
   format.setDepthBufferSize(24);

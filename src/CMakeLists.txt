@@ -5,6 +5,7 @@ qt_add_executable(cad_viewer)
 #
 target_sources(cad_viewer
   PRIVATE
+    application.cpp
     asan.cpp
     graphic_driver.cpp
     main.cpp
@@ -26,6 +27,7 @@ target_sources(cad_viewer
   TYPE HEADERS
   BASE_DIRS ${CMAKE_SOURCE_DIR}/include
   FILES
+    ${CMAKE_SOURCE_DIR}/include/cad_viewer/application.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/graphic_driver.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/main_window.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/object_owner.h
