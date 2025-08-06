@@ -11,29 +11,20 @@
  *
  */
 //----------------------------------------------------------------------
-#include "cad_viewer/application.h"
+#include "cad_viewer/document.h"
 
-#include <TDocStd_Application.hxx>
 #include <TDocStd_Document.hxx>
 
 namespace cad_viewer {
 
-Application::Application(int argc, char* argv[])
-  : m_qapp{argc, argv}
-  , m_app{new TDocStd_Application{}}
+Document::Document(Handle(TDocStd_Document) doc)
+  : m_doc{std::move(doc)}
 {
 }
 
-Document Application::newDocument() const
+Document::~Document()
 {
-  Handle(TDocStd_Document) document;
-  m_app->NewDocument("", document);
-  return Document{document};
-}
-
-int Application::exec()
-{
-  return m_qapp.exec();
+  m_doc->Close();
 }
 
 } // namespace cad_viewer

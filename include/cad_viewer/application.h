@@ -14,7 +14,12 @@
 #ifndef CAD_VIEWER_APPLICATION_H_INCLUDED
 #define CAD_VIEWER_APPLICATION_H_INCLUDED
 
+#include "cad_viewer/document.h"
+
 #include <QApplication>
+#include <Standard_Handle.hxx>
+
+class TDocStd_Application;
 
 namespace cad_viewer {
 
@@ -23,10 +28,13 @@ class Application
 public:
   explicit Application(int argc, char* argv[]);
 
+  [[nodiscard]] Document newDocument() const;
+
   [[nodiscard]] int exec();
 
 private:
-  QApplication m_app;
+  QApplication m_qapp;
+  Handle(TDocStd_Application) m_app;
 };
 
 } // namespace cad_viewer

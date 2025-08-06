@@ -7,6 +7,7 @@ target_sources(cad_viewer
   PRIVATE
     application.cpp
     asan.cpp
+    document.cpp
     graphic_driver.cpp
     main.cpp
     main_window.cpp
@@ -28,6 +29,7 @@ target_sources(cad_viewer
   BASE_DIRS ${CMAKE_SOURCE_DIR}/include
   FILES
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/application.h
+    ${CMAKE_SOURCE_DIR}/include/cad_viewer/document.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/graphic_driver.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/main_window.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/object_owner.h
@@ -53,6 +55,7 @@ target_link_libraries(cad_viewer
     TKOpenGl
     TKV3d
     TKernel
+    TKStd
 )
 target_compile_features(cad_viewer
   PRIVATE

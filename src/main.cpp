@@ -25,6 +25,8 @@ int main(int argc, char* argv[])
 
   Application app{argc, argv};
 
+  Document initial_doc = app.newDocument();
+
   QSurfaceFormat format{};
   format.setDepthBufferSize(24);
   format.setStencilBufferSize(8);

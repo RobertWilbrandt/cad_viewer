@@ -11,29 +11,28 @@
  *
  */
 //----------------------------------------------------------------------
-#include "cad_viewer/application.h"
+#ifndef CAD_VIEWER_DOCUMENT_H_INCLUDED
+#define CAD_VIEWER_DOCUMENT_H_INCLUDED
 
-#include <TDocStd_Application.hxx>
-#include <TDocStd_Document.hxx>
+#include <Standard_Handle.hxx>
+
+class TDocStd_Document;
 
 namespace cad_viewer {
 
-Application::Application(int argc, char* argv[])
-  : m_qapp{argc, argv}
-  , m_app{new TDocStd_Application{}}
+class Document
 {
-}
+public:
+  explicit Document(Handle(TDocStd_Document) doc);
+  ~Document();
 
-Document Application::newDocument() const
-{
-  Handle(TDocStd_Document) document;
-  m_app->NewDocument("", document);
-  return Document{document};
-}
+  Document(const Document&)            = delete;
+  Document& operator=(const Document&) = delete;
 
-int Application::exec()
-{
-  return m_qapp.exec();
-}
+private:
+  Handle(TDocStd_Document) m_doc;
+};
 
 } // namespace cad_viewer
+
+#endif // CAD_VIEWER_DOCUMENT_H_INCLUDED
