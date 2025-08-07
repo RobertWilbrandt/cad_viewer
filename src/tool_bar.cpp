@@ -13,6 +13,7 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/tool_bar.h"
 
+#include "cad_viewer/tool_bar/model.h"
 #include "cad_viewer/tool_bar/view.h"
 
 #include <QTabWidget>
@@ -26,9 +27,8 @@ ToolBar::ToolBar(const ViewerConfig* viewer_config, QWidget* parent)
   setMovable(false);
 
   auto* tab_bar = new QTabWidget{this};
-
-  auto* view_tab = new tool_bar::View{viewer_config, this};
-  tab_bar->addTab(view_tab, tr("View"));
+  tab_bar->addTab(new tool_bar::Model{this}, tr("&Model"));
+  tab_bar->addTab(new tool_bar::View{viewer_config, this}, tr("&View"));
 
   addWidget(tab_bar);
 }
