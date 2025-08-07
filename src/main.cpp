@@ -15,12 +15,15 @@
 #include "cad_viewer/graphic_driver.h"
 #include "cad_viewer/main_window.h"
 
+#include <QCoreApplication>
 #include <QSurfaceFormat>
 
 using namespace cad_viewer;
 
 int main(int argc, char* argv[])
 {
+  QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+
   GraphicDriver graphic_driver{};
 
   Application app{argc, argv};

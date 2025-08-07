@@ -17,9 +17,11 @@
 #include <QMainWindow>
 
 class QCloseEvent;
+class QTabWidget;
 namespace cad_viewer {
 class Application;
 class GraphicDriver;
+class ViewerConfig;
 } // namespace cad_viewer
 
 
@@ -40,12 +42,18 @@ protected:
   void closeEvent(QCloseEvent* event) override;
 
 private slots:
+  void newDocument();
   void exit();
 
 private:
+  void createMenus();
+
+  GraphicDriver* m_graphic_driver;
   Application* m_app;
 
-  void createMenus();
+  ViewerConfig* m_viewer_config;
+
+  QTabWidget* m_center;
 };
 
 } // namespace cad_viewer

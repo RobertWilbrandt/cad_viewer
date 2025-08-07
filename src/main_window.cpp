@@ -34,23 +34,23 @@ namespace cad_viewer {
 
 MainWindow::MainWindow(GraphicDriver* graphic_driver, Application* application, QWidget* parent)
   : QMainWindow{parent}
+  , m_graphic_driver{graphic_driver}
   , m_app{application}
+  , m_viewer_config{new ViewerConfig{this}}
 {
   createMenus();
 
-  auto* viewer_config = new ViewerConfig{this};
-
-  auto* tool_bar = new ToolBar{viewer_config, this};
+  auto* tool_bar = new ToolBar{m_viewer_config, this};
   addToolBar(Qt::TopToolBarArea, tool_bar);
 
-  auto* center_tab_area = new QTabWidget{this};
-  center_tab_area->setTabPosition(QTabWidget::South);
+  m_center = new QTabWidget{this};
+  m_center->setTabPosition(QTabWidget::South);
 
   auto* document     = application->newDocument();
-  auto* scene_viewer = new SceneViewer{graphic_driver, document, viewer_config, this};
-  center_tab_area->addTab(scene_viewer->createView(center_tab_area), document->name());
+  auto* scene_viewer = new SceneViewer{graphic_driver, document, m_viewer_config, this};
+  m_center->addTab(scene_viewer->createView(m_center), document->name());
 
-  setCentralWidget(center_tab_area);
+  setCentralWidget(m_center);
 
   auto* scene_browser             = new SceneBrowser{scene_viewer->scene(), this};
   auto* scene_browser_dock_widget = new QDockWidget{this};
@@ -74,12 +74,25 @@ void MainWindow::createMenus()
 {
   auto* file_menu = menuBar()->addMenu(tr("&File"));
 
+  auto new_action = new QAction{tr("&New"), this};
+  new_action->setShortcut(QKeySequence::New);
+  new_action->setStatusTip(tr("Create new document"));
+  QObject::connect(new_action, &QAction::triggered, this, &MainWindow::newDocument);
+  file_menu->addAction(new_action);
+
   auto* exit_action =
     new QAction{QIcon::fromTheme(QIcon::ThemeIcon::ApplicationExit), tr("&Exit"), this};
   exit_action->setShortcuts(QKeySequence::Quit);
   exit_action->setStatusTip(tr("Exit Application"));
   QObject::connect(exit_action, &QAction::triggered, this, &MainWindow::exit);
   file_menu->addAction(exit_action);
+}
+
+void MainWindow::newDocument()
+{
+  auto* document     = m_app->newDocument();
+  auto* scene_viewer = new SceneViewer{m_graphic_driver, document, m_viewer_config, this};
+  m_center->addTab(scene_viewer->createView(m_center), document->name());
 }
 
 void MainWindow::exit()
