@@ -13,6 +13,8 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/application.h"
 
+#include "cad_viewer/document.h"
+
 #include <TDocStd_Application.hxx>
 #include <TDocStd_Document.hxx>
 
@@ -24,11 +26,11 @@ Application::Application(int argc, char* argv[])
 {
 }
 
-Document Application::newDocument() const
+Document* Application::newDocument()
 {
   Handle(TDocStd_Document) document;
   m_app->NewDocument("", document);
-  return Document{document};
+  return new Document{document, &m_qapp};
 }
 
 int Application::exec()

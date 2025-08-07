@@ -19,8 +19,9 @@
 
 namespace cad_viewer {
 
-Document::Document(Handle(TDocStd_Document) doc)
-  : m_doc{std::move(doc)}
+Document::Document(Handle(TDocStd_Document) doc, QObject* parent)
+  : QObject{parent}
+  , m_doc{std::move(doc)}
 {
   TDataStd_Name::Set(m_doc->Main(), "New Document");
 
