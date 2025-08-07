@@ -71,3 +71,8 @@ target_link_libraries(cad_viewer
   PRIVATE
     ${CAD_VIEWER_LINK_FLAGS}
 )
+
+set_target_properties(cad_viewer
+  PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
