@@ -25,15 +25,13 @@ int main(int argc, char* argv[])
 
   Application app{argc, argv};
 
-  auto* initial_doc = app.newDocument();
-
   QSurfaceFormat format{};
   format.setDepthBufferSize(24);
   format.setStencilBufferSize(8);
   format.setProfile(QSurfaceFormat::CompatibilityProfile);
   QSurfaceFormat::setDefaultFormat(format);
 
-  MainWindow window{&graphic_driver};
+  MainWindow window{&graphic_driver, &app};
   window.show();
 
   return app.exec();

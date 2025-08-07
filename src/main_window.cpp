@@ -13,6 +13,7 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/main_window.h"
 
+#include "cad_viewer/application.h"
 #include "cad_viewer/scene.h"
 #include "cad_viewer/scene_browser.h"
 #include "cad_viewer/scene_view_widget.h"
@@ -29,7 +30,7 @@
 
 namespace cad_viewer {
 
-MainWindow::MainWindow(GraphicDriver* graphic_driver, QWidget* parent)
+MainWindow::MainWindow(GraphicDriver* graphic_driver, Application* application, QWidget* parent)
   : QMainWindow{parent}
 {
   createMenus();
@@ -39,7 +40,8 @@ MainWindow::MainWindow(GraphicDriver* graphic_driver, QWidget* parent)
   auto* tool_bar = new ToolBar{viewer_config, this};
   addToolBar(Qt::TopToolBarArea, tool_bar);
 
-  auto* scene_viewer      = new SceneViewer{graphic_driver, viewer_config, this};
+  auto* document          = application->newDocument();
+  auto* scene_viewer      = new SceneViewer{graphic_driver, document, viewer_config, this};
   auto* scene_view_widget = scene_viewer->createView();
   setCentralWidget(scene_view_widget);
 

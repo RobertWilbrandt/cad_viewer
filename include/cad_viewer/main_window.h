@@ -17,16 +17,21 @@
 #include <QMainWindow>
 
 class QCloseEvent;
+namespace cad_viewer {
+class Application;
+class GraphicDriver;
+} // namespace cad_viewer
+
 
 namespace cad_viewer {
-
-class GraphicDriver;
 
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
 public:
-  explicit MainWindow(GraphicDriver* graphic_driver, QWidget* parent = nullptr);
+  explicit MainWindow(GraphicDriver* graphic_driver,
+                      Application* application,
+                      QWidget* parent = nullptr);
 
 signals:
   void closeRequestReceived();

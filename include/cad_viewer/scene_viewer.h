@@ -24,18 +24,22 @@
 class QWidget;
 class V3d_Viewer;
 class AIS_InteractiveContext;
-
 namespace cad_viewer {
-
+class Document;
 class GraphicDriver;
 class Scene;
 class SceneViewWidget;
+} // namespace cad_viewer
+
+
+namespace cad_viewer {
 
 class SceneViewer : public QObject
 {
   Q_OBJECT
 public:
   explicit SceneViewer(GraphicDriver* graphic_driver,
+                       Document* document,
                        const ViewerConfig* config,
                        QObject* parent = nullptr);
 
@@ -52,6 +56,8 @@ public slots:
   void cleanup();
 
 private:
+  Document* m_document;
+
   Handle(V3d_Viewer) m_viewer;
   Handle(AIS_InteractiveContext) m_context;
 

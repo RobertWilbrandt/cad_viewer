@@ -25,8 +25,12 @@
 
 namespace cad_viewer {
 
-SceneViewer::SceneViewer(GraphicDriver* graphic_driver, const ViewerConfig* config, QObject* parent)
+SceneViewer::SceneViewer(GraphicDriver* graphic_driver,
+                         Document* document,
+                         const ViewerConfig* config,
+                         QObject* parent)
   : QObject{parent}
+  , m_document{document}
 {
   m_viewer = new V3d_Viewer{graphic_driver->driver()};
   m_viewer->SetDefaultBackgroundColor(Quantity_NOC_LIGHTGRAY);
