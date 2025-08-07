@@ -14,6 +14,7 @@
 #include "cad_viewer/main_window.h"
 
 #include "cad_viewer/application.h"
+#include "cad_viewer/document.h"
 #include "cad_viewer/scene.h"
 #include "cad_viewer/scene_browser.h"
 #include "cad_viewer/scene_view_widget.h"
@@ -26,12 +27,14 @@
 #include <QDockWidget>
 #include <QIcon>
 #include <QMenuBar>
+#include <QTabWidget>
 #include <QVBoxLayout>
 
 namespace cad_viewer {
 
 MainWindow::MainWindow(GraphicDriver* graphic_driver, Application* application, QWidget* parent)
   : QMainWindow{parent}
+  , m_app{application}
 {
   createMenus();
 
@@ -40,10 +43,14 @@ MainWindow::MainWindow(GraphicDriver* graphic_driver, Application* application, 
   auto* tool_bar = new ToolBar{viewer_config, this};
   addToolBar(Qt::TopToolBarArea, tool_bar);
 
-  auto* document          = application->newDocument();
-  auto* scene_viewer      = new SceneViewer{graphic_driver, document, viewer_config, this};
-  auto* scene_view_widget = scene_viewer->createView();
-  setCentralWidget(scene_view_widget);
+  auto* center_tab_area = new QTabWidget{this};
+  center_tab_area->setTabPosition(QTabWidget::South);
+
+  auto* document     = application->newDocument();
+  auto* scene_viewer = new SceneViewer{graphic_driver, document, viewer_config, this};
+  center_tab_area->addTab(scene_viewer->createView(center_tab_area), document->name());
+
+  setCentralWidget(center_tab_area);
 
   auto* scene_browser             = new SceneBrowser{scene_viewer->scene(), this};
   auto* scene_browser_dock_widget = new QDockWidget{this};

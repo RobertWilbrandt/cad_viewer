@@ -39,13 +39,13 @@ signals:
 protected:
   void closeEvent(QCloseEvent* event) override;
 
-private:
-  GraphicDriver* m_graphic_driver;
-
-  void createMenus();
-
 private slots:
   void exit();
+
+private:
+  Application* m_app;
+
+  void createMenus();
 };
 
 } // namespace cad_viewer

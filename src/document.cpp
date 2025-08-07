@@ -28,6 +28,19 @@ Document::Document(Handle(TDocStd_Document) doc, QObject* parent)
   TDF_Tool::DeepDump(std::cout, m_doc->Main());
 }
 
+QString Document::name() const
+{
+  Handle(TDataStd_Name) name;
+  if (!m_doc->Main().FindAttribute(TDataStd_Name::GetID(), name))
+  {
+    throw std::runtime_error{"Missing document name attribute"};
+  }
+
+  std::u16string name_str{name->Get().ToExtString(),
+                          static_cast<std::size_t>(name->Get().Length())};
+  return QString::fromStdU16String(name_str);
+}
+
 Document::~Document()
 {
   m_doc->Close();

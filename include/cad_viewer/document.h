@@ -28,6 +28,8 @@ public:
   explicit Document(Handle(TDocStd_Document) doc, QObject* parent = nullptr);
   ~Document();
 
+  [[nodiscard]] QString name() const;
+
   Document(const Document&)            = delete;
   Document& operator=(const Document&) = delete;
 
