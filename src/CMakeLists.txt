@@ -1,5 +1,7 @@
 qt_add_executable(cad_viewer)
 
+add_subdirectory(tool_bar)
+
 #
 # Define sources and headers
 #
