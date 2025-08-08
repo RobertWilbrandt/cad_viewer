@@ -14,13 +14,13 @@
 #include "cad_viewer/main_window.h"
 
 #include "cad_viewer/application.h"
+#include "cad_viewer/config.h"
 #include "cad_viewer/document.h"
 #include "cad_viewer/scene.h"
 #include "cad_viewer/scene_browser.h"
 #include "cad_viewer/scene_view_widget.h"
 #include "cad_viewer/scene_viewer.h"
 #include "cad_viewer/tool_bar.h"
-#include "cad_viewer/viewer_config.h"
 
 #include <QAction>
 #include <QCoreApplication>
@@ -36,18 +36,18 @@ MainWindow::MainWindow(GraphicDriver* graphic_driver, Application* application, 
   : QMainWindow{parent}
   , m_graphic_driver{graphic_driver}
   , m_app{application}
-  , m_viewer_config{new ViewerConfig{this}}
+  , m_config{new Config{this}}
 {
   createMenus();
 
-  auto* tool_bar = new ToolBar{m_viewer_config, this};
+  auto* tool_bar = new ToolBar{m_config, this};
   addToolBar(Qt::TopToolBarArea, tool_bar);
 
   m_center = new QTabWidget{this};
   m_center->setTabPosition(QTabWidget::South);
 
   auto* document     = application->newDocument();
-  auto* scene_viewer = new SceneViewer{graphic_driver, document, m_viewer_config, this};
+  auto* scene_viewer = new SceneViewer{graphic_driver, document, m_config->viewer(), this};
   m_center->addTab(scene_viewer->createView(m_center), document->name());
 
   setCentralWidget(m_center);
@@ -91,7 +91,7 @@ void MainWindow::createMenus()
 void MainWindow::newDocument()
 {
   auto* document     = m_app->newDocument();
-  auto* scene_viewer = new SceneViewer{m_graphic_driver, document, m_viewer_config, this};
+  auto* scene_viewer = new SceneViewer{m_graphic_driver, document, m_config->viewer(), this};
   m_center->addTab(scene_viewer->createView(m_center), document->name());
 }
 

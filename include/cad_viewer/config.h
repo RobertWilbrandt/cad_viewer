@@ -7,28 +7,33 @@
 /*!\file
  *
  * \author  Robert Wilbrandt <robert@stamm-wilbrandt.de>
- * \date    2025-07-21
+ * \date    2025-08-08
  *
  */
 //----------------------------------------------------------------------
-#ifndef CAD_VIEWER_TOOL_BAR_H_INCLUDED
-#define CAD_VIEWER_TOOL_BAR_H_INCLUDED
+#ifndef CAD_VIEWER_CONFIG_H_INCLUDED
+#define CAD_VIEWER_CONFIG_H_INCLUDED
 
-#include <QToolBar>
+#include <QObject>
 
 namespace cad_viewer {
-class Config;
+class ViewerConfig;
 }
 
+
 namespace cad_viewer {
 
-class ToolBar : public QToolBar
+class Config : public QObject
 {
-  Q_OBJECT
 public:
-  explicit ToolBar(const Config* config, QWidget* parent = nullptr);
+  explicit Config(QObject* parent = nullptr);
+
+  [[nodiscard]] ViewerConfig* viewer() const;
+
+private:
+  ViewerConfig* m_viewer_config;
 };
 
 } // namespace cad_viewer
 
-#endif // CAD_VIEWER_TOOL_BAR_H_INCLUDED
+#endif // CAD_VIEWER_CONFIG_H_INCLUDED

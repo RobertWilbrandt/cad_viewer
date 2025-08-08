@@ -7,31 +7,25 @@
 /*!\file
  *
  * \author  Robert Wilbrandt <robert@stamm-wilbrandt.de>
- * \date    2025-07-21
+ * \date    2025-08-08
  *
  */
 //----------------------------------------------------------------------
-#include "cad_viewer/tool_bar.h"
-
 #include "cad_viewer/config.h"
-#include "cad_viewer/tool_bar/model.h"
-#include "cad_viewer/tool_bar/view.h"
 
-#include <QTabWidget>
+#include "cad_viewer/viewer_config.h"
 
 namespace cad_viewer {
 
-ToolBar::ToolBar(const Config* config, QWidget* parent)
-  : QToolBar{parent}
+Config::Config(QObject* parent)
+  : QObject{parent}
+  , m_viewer_config{new ViewerConfig{this}}
 {
-  setFloatable(false);
-  setMovable(false);
+}
 
-  auto* tab_bar = new QTabWidget{this};
-  tab_bar->addTab(new tool_bar::Model{this}, tr("&Model"));
-  tab_bar->addTab(new tool_bar::View{config->viewer(), this}, tr("&View"));
-
-  addWidget(tab_bar);
+ViewerConfig* Config::viewer() const
+{
+  return m_viewer_config;
 }
 
 } // namespace cad_viewer

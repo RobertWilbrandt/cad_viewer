@@ -21,7 +21,7 @@ class QTabWidget;
 namespace cad_viewer {
 class Application;
 class GraphicDriver;
-class ViewerConfig;
+class Config;
 } // namespace cad_viewer
 
 
@@ -51,7 +51,7 @@ private:
   GraphicDriver* m_graphic_driver;
   Application* m_app;
 
-  ViewerConfig* m_viewer_config;
+  Config* m_config;
 
   QTabWidget* m_center;
 };
