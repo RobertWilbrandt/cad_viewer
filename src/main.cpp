@@ -23,13 +23,13 @@ int main(int argc, char* argv[])
 {
   QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
-  Application app{argc, argv};
-
   QSurfaceFormat format{};
   format.setDepthBufferSize(24);
   format.setStencilBufferSize(8);
   format.setProfile(QSurfaceFormat::CompatibilityProfile);
   QSurfaceFormat::setDefaultFormat(format);
+
+  Application app{argc, argv};
 
   MainWindow window{&app};
   window.show();

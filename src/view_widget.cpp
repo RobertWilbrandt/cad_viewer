@@ -68,13 +68,6 @@ ViewWidget::ViewWidget(Config* config, QWidget* parent)
   setUpdatesEnabled(true);
   setUpdateBehavior(QOpenGLWidget::NoPartialUpdate);
 
-  // Set surface format
-  QSurfaceFormat format{};
-  format.setDepthBufferSize(24);
-  format.setStencilBufferSize(8);
-  format.setProfile(QSurfaceFormat::CompatibilityProfile);
-  setFormat(format);
-
   setAttribute(Qt::WA_NativeWindow); // Make sure winId() returns a valid handle later on
 }
 
