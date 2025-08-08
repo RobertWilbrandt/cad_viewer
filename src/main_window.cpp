@@ -18,7 +18,6 @@
 #include "cad_viewer/document.h"
 #include "cad_viewer/scene.h"
 #include "cad_viewer/scene_browser.h"
-#include "cad_viewer/scene_view_widget.h"
 #include "cad_viewer/scene_viewer.h"
 #include "cad_viewer/tool_bar.h"
 #include "cad_viewer/view_widget.h"
@@ -46,11 +45,9 @@ MainWindow::MainWindow(Application* application, QWidget* parent)
   m_center = new QTabWidget{this};
   m_center->setTabPosition(QTabWidget::South);
 
-  auto* document = application->newDocument();
-  // auto* scene_viewer = new SceneViewer{graphic_driver, document, m_config->viewer(), this};
-  // m_center->addTab(scene_viewer->createView(m_center), document->name());
+  auto* document    = application->newDocument();
   auto* view_widget = new ViewWidget{m_config, this};
-  m_center->addTab(view_widget, "abc");
+  m_center->addTab(view_widget, document->name());
 
   setCentralWidget(m_center);
 
@@ -92,13 +89,9 @@ void MainWindow::createMenus()
 
 void MainWindow::newDocument()
 {
-  /*auto* document     = m_app->newDocument();
-  auto* scene_viewer = new SceneViewer{m_graphic_driver, document, m_config->viewer(), this};
-  m_center->addTab(scene_viewer->createView(m_center), document->name());*/
-  auto* new_tab = new ViewWidget{m_config, this};
-  m_center->addTab(new_tab, "abc");
-  new_tab->show();
-  new_tab->hide();
+  auto* document = m_app->newDocument();
+  auto* new_tab  = new ViewWidget{m_config, this};
+  m_center->addTab(new_tab, document->name());
 
   QObject::connect(
     this, &MainWindow::closeRequestReceived, new_tab, &ViewWidget::cleanup, Qt::DirectConnection);

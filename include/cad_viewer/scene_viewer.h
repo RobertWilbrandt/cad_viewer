@@ -19,16 +19,12 @@
 #include <QObject>
 #include <Standard_Handle.hxx>
 #include <memory>
-#include <vector>
 
-class QWidget;
-class V3d_Viewer;
 class AIS_InteractiveContext;
+class V3d_Viewer;
 namespace cad_viewer {
-class Document;
-class GraphicDriver;
+class Config;
 class Scene;
-class SceneViewWidget;
 } // namespace cad_viewer
 
 
@@ -38,12 +34,10 @@ class SceneViewer : public QObject
 {
   Q_OBJECT
 public:
-  explicit SceneViewer(GraphicDriver* graphic_driver,
-                       Document* document,
-                       const ViewerConfig* config,
+  explicit SceneViewer(Handle(V3d_Viewer) viewer,
+                       Handle(AIS_InteractiveContext) context,
+                       Config* config,
                        QObject* parent = nullptr);
-
-  SceneViewWidget* createView(QWidget* parent = nullptr);
 
   [[nodiscard]] Scene& scene() const;
 
@@ -53,16 +47,11 @@ signals:
 public slots:
   void setGridType(ViewerConfig::GridType grid_type);
 
-  void cleanup();
-
 private:
-  Document* m_document;
-
   Handle(V3d_Viewer) m_viewer;
   Handle(AIS_InteractiveContext) m_context;
 
   std::shared_ptr<Scene> m_scene;
-  std::vector<SceneViewWidget*> m_views;
 };
 
 } // namespace cad_viewer

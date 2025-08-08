@@ -14,9 +14,11 @@
 #include "cad_viewer/view_widget.h"
 
 #include "cad_viewer/graphic_driver.h"
+#include "cad_viewer/scene_viewer.h"
 #include "cad_viewer/widget_view_controller.h"
 
 #include <AIS_InteractiveContext.hxx>
+#include <AIS_ViewCube.hxx>
 #include <Aspect_DisplayConnection.hxx>
 #include <Aspect_NeutralWindow.hxx>
 #include <Graphic3d_Vec2.hxx>
@@ -56,6 +58,7 @@ namespace cad_viewer {
 
 ViewWidget::ViewWidget(Config* config, QWidget* parent)
   : QOpenGLWidget{parent}
+  , m_config{config}
   , m_view_controller{std::make_shared<WidgetViewController>(this)}
 {
   // Widget setup
@@ -73,28 +76,23 @@ ViewWidget::ViewWidget(Config* config, QWidget* parent)
   setFormat(format);
 
   setAttribute(Qt::WA_NativeWindow); // Make sure winId() returns a valid handle later on
-                                     //
-  QObject::connect(QCoreApplication::instance(),
-                   &QCoreApplication::aboutToQuit,
-                   this,
-                   &ViewWidget::cleanup,
-                   Qt::DirectConnection);
 }
 
 void ViewWidget::initializeGL()
 {
-  m_graphic_driver = std::make_shared<GraphicDriver>();
-
+  m_graphic_driver          = std::make_shared<GraphicDriver>();
   Handle(V3d_Viewer) viewer = new V3d_Viewer{m_graphic_driver->driver()};
   viewer->SetDefaultBackgroundColor(Quantity_NOC_LIGHTGRAY);
   viewer->SetDefaultLights();
   viewer->SetLightOn();
-  viewer->ActivateGrid(Aspect_GT_Rectangular, Aspect_GDM_Lines);
+
 
   m_view = viewer->CreateView();
   m_view->SetImmediateUpdate(false);
 
   m_context = new AIS_InteractiveContext{viewer};
+  m_viewer  = new SceneViewer{viewer, m_context, m_config, this};
+  QObject::connect(m_viewer, &SceneViewer::viewUpdateRequested, this, &ViewWidget::updateView);
 
   const auto cur_rect = rect();
 
@@ -115,6 +113,9 @@ void ViewWidget::initializeGL()
   window->SetSize(cur_rect.right() - cur_rect.left(), cur_rect.bottom() - cur_rect.top());
   window->SetNativeHandle(native_handle);
   m_view->SetWindow(window, gl_context->RenderingContext());
+
+  // Create view cube
+  m_context->Display(createDefaultViewCube(), 0, 0, false);
 }
 
 void ViewWidget::paintGL()
@@ -161,11 +162,6 @@ void ViewWidget::paintGL()
   m_view_controller->FlushViewEvents(m_context, m_view, true);
 }
 
-Handle(AIS_AnimationCamera) ViewWidget::cameraAnimation() const
-{
-  return m_view_controller->ViewAnimation();
-}
-
 void ViewWidget::cleanup()
 {
   if (m_view.IsNull())
@@ -181,6 +177,20 @@ void ViewWidget::cleanup()
   m_context.Nullify();
 
   doneCurrent();
+}
+
+void ViewWidget::updateView()
+{
+  update();
+}
+
+Handle(AIS_ViewCube) ViewWidget::createDefaultViewCube() const
+{
+  Handle(AIS_ViewCube) result = new AIS_ViewCube{};
+  result->SetViewAnimation(m_view_controller->ViewAnimation());
+  result->SetFixedAnimationLoop(false);
+  result->SetAutoStartAnimation(true);
+  return result;
 }
 
 void ViewWidget::mousePressEvent(QMouseEvent* event)

@@ -21,14 +21,16 @@
 #include <memory>
 
 class QSinglePointEvent;
-class V3d_View;
 class AIS_InteractiveContext;
 class AIS_AnimationCamera;
 class AIS_ViewController;
+class AIS_ViewCube;
 class OpenGl_Context;
+class V3d_View;
 namespace cad_viewer {
 class Config;
 class GraphicDriver;
+class SceneViewer;
 } // namespace cad_viewer
 
 
@@ -43,9 +45,12 @@ public:
   void initializeGL() override;
   void paintGL() override;
 
-  [[nodiscard]] Handle(AIS_AnimationCamera) cameraAnimation() const;
+  SceneViewer* viewer() const;
 
   void cleanup();
+
+public slots:
+  void updateView();
 
 protected:
   void mousePressEvent(QMouseEvent* event) override;
@@ -54,6 +59,8 @@ protected:
   void wheelEvent(QWheelEvent* event) override;
 
 private:
+  Handle(AIS_ViewCube) createDefaultViewCube() const;
+
   Graphic3d_Vec2i mousePosition(QSinglePointEvent* event) const;
   Aspect_VKeyMouse convert(Qt::MouseButtons buttons) const;
   Aspect_VKeyFlags convert(Qt::KeyboardModifiers modifiers) const;
@@ -63,6 +70,9 @@ private:
   Handle(OpenGl_Context) m_gl_context;
   Handle(V3d_View) m_view;
   Handle(AIS_InteractiveContext) m_context;
+
+  Config* m_config;
+  SceneViewer* m_viewer;
 
   std::shared_ptr<AIS_ViewController> m_view_controller;
 };
