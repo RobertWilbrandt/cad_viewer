@@ -91,10 +91,11 @@ void MainWindow::newDocument()
 {
   auto* document = m_app->newDocument();
   auto* new_tab  = new ViewWidget{m_config, this};
-  m_center->addTab(new_tab, document->name());
-
   QObject::connect(
     this, &MainWindow::closeRequestReceived, new_tab, &ViewWidget::cleanup, Qt::DirectConnection);
+
+  m_center->addTab(new_tab, document->name());
+  m_center->setCurrentWidget(new_tab);
 }
 
 void MainWindow::exit()
