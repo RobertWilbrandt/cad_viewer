@@ -35,18 +35,20 @@ namespace cad_viewer {
 MainWindow::MainWindow(Application* application, QWidget* parent)
   : QMainWindow{parent}
   , m_app{application}
-  , m_config{new Config{this}}
 {
   createMenus();
 
-  auto* tool_bar = new ToolBar{m_config, this};
+  Config* initial_config = new Config{this};
+
+  auto* tool_bar = new ToolBar{initial_config, this};
   addToolBar(Qt::TopToolBarArea, tool_bar);
 
   m_center = new QTabWidget{this};
   m_center->setTabPosition(QTabWidget::South);
+  QObject::connect(m_center, &QTabWidget::currentChanged, this, &MainWindow::tabChanged);
 
   auto* document    = application->newDocument();
-  auto* view_widget = new ViewWidget{m_config, this};
+  auto* view_widget = new ViewWidget{initial_config, this};
   m_center->addTab(view_widget, document->name());
 
   setCentralWidget(m_center);
@@ -69,6 +71,29 @@ void MainWindow::closeEvent(QCloseEvent* event)
   QMainWindow::closeEvent(event);
 }
 
+void MainWindow::newDocument()
+{
+  auto* new_config = new Config{this};
+  auto* document   = m_app->newDocument();
+  auto* new_tab    = new ViewWidget{new_config, this};
+  QObject::connect(
+    this, &MainWindow::closeRequestReceived, new_tab, &ViewWidget::cleanup, Qt::DirectConnection);
+
+  m_center->addTab(new_tab, document->name());
+  m_center->setCurrentWidget(new_tab);
+}
+
+void MainWindow::exit()
+{
+  QCoreApplication::quit();
+}
+
+void MainWindow::tabChanged(int index)
+{
+  auto* view_widget = static_cast<ViewWidget*>(m_center->widget(index));
+  emit centerViewChanged(view_widget);
+}
+
 void MainWindow::createMenus()
 {
   auto* file_menu = menuBar()->addMenu(tr("&File"));
@@ -85,22 +110,6 @@ void MainWindow::createMenus()
   exit_action->setStatusTip(tr("Exit Application"));
   QObject::connect(exit_action, &QAction::triggered, this, &MainWindow::exit);
   file_menu->addAction(exit_action);
-}
-
-void MainWindow::newDocument()
-{
-  auto* document = m_app->newDocument();
-  auto* new_tab  = new ViewWidget{m_config, this};
-  QObject::connect(
-    this, &MainWindow::closeRequestReceived, new_tab, &ViewWidget::cleanup, Qt::DirectConnection);
-
-  m_center->addTab(new_tab, document->name());
-  m_center->setCurrentWidget(new_tab);
-}
-
-void MainWindow::exit()
-{
-  QCoreApplication::quit();
 }
 
 } // namespace cad_viewer

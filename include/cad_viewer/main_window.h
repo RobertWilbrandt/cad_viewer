@@ -21,6 +21,7 @@ class QTabWidget;
 namespace cad_viewer {
 class Application;
 class Config;
+class ViewWidget;
 } // namespace cad_viewer
 
 
@@ -33,6 +34,8 @@ public:
   explicit MainWindow(Application* application, QWidget* parent = nullptr);
 
 signals:
+  void centerViewChanged(ViewWidget* view);
+
   void closeRequestReceived();
 
 protected:
@@ -42,12 +45,12 @@ private slots:
   void newDocument();
   void exit();
 
+  void tabChanged(int index);
+
 private:
   void createMenus();
 
   Application* m_app;
-
-  Config* m_config;
 
   QTabWidget* m_center;
 };
