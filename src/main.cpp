@@ -12,7 +12,6 @@
  */
 //----------------------------------------------------------------------
 #include "cad_viewer/application.h"
-#include "cad_viewer/graphic_driver.h"
 #include "cad_viewer/main_window.h"
 
 #include <QCoreApplication>
@@ -24,8 +23,6 @@ int main(int argc, char* argv[])
 {
   QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
-  GraphicDriver graphic_driver{};
-
   Application app{argc, argv};
 
   QSurfaceFormat format{};
@@ -34,7 +31,7 @@ int main(int argc, char* argv[])
   format.setProfile(QSurfaceFormat::CompatibilityProfile);
   QSurfaceFormat::setDefaultFormat(format);
 
-  MainWindow window{&graphic_driver, &app};
+  MainWindow window{&app};
   window.show();
 
   return app.exec();

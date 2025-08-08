@@ -14,15 +14,17 @@
 #include "cad_viewer/graphic_driver.h"
 
 #include <Aspect_DisplayConnection.hxx>
+#include <OpenGl_Context.hxx>
 #include <OpenGl_GraphicDriver.hxx>
+#include <QOpenGLContext>
 
 namespace cad_viewer {
 
 GraphicDriver::GraphicDriver()
 {
-  Handle(Aspect_DisplayConnection) display_connection = new Aspect_DisplayConnection{};
-  m_driver                                = new OpenGl_GraphicDriver{display_connection, false};
-  m_driver->ChangeOptions().buffersNoSwap = true;       // QOpenGLWidget handles buffer swap
+  Handle(Aspect_DisplayConnection) displayConnection = new Aspect_DisplayConnection();
+  m_driver                                     = new OpenGl_GraphicDriver(displayConnection, false);
+  m_driver->ChangeOptions().buffersNoSwap      = true;  // QOpenGLWidget handles buffer swap
   m_driver->ChangeOptions().buffersOpaqueAlpha = true;  // Don't write to alpha channel
   m_driver->ChangeOptions().useSystemBuffer    = false; // Always use offscreen FBO
 }

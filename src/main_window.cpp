@@ -21,6 +21,7 @@
 #include "cad_viewer/scene_view_widget.h"
 #include "cad_viewer/scene_viewer.h"
 #include "cad_viewer/tool_bar.h"
+#include "cad_viewer/view_widget.h"
 
 #include <QAction>
 #include <QCoreApplication>
@@ -32,9 +33,8 @@
 
 namespace cad_viewer {
 
-MainWindow::MainWindow(GraphicDriver* graphic_driver, Application* application, QWidget* parent)
+MainWindow::MainWindow(Application* application, QWidget* parent)
   : QMainWindow{parent}
-  , m_graphic_driver{graphic_driver}
   , m_app{application}
   , m_config{new Config{this}}
 {
@@ -46,21 +46,23 @@ MainWindow::MainWindow(GraphicDriver* graphic_driver, Application* application, 
   m_center = new QTabWidget{this};
   m_center->setTabPosition(QTabWidget::South);
 
-  auto* document     = application->newDocument();
-  auto* scene_viewer = new SceneViewer{graphic_driver, document, m_config->viewer(), this};
-  m_center->addTab(scene_viewer->createView(m_center), document->name());
+  auto* document = application->newDocument();
+  // auto* scene_viewer = new SceneViewer{graphic_driver, document, m_config->viewer(), this};
+  // m_center->addTab(scene_viewer->createView(m_center), document->name());
+  auto* view_widget = new ViewWidget{m_config, this};
+  m_center->addTab(view_widget, "abc");
 
   setCentralWidget(m_center);
 
-  auto* scene_browser             = new SceneBrowser{scene_viewer->scene(), this};
+  /*auto* scene_browser             = new SceneBrowser{scene_viewer->scene(), this};
   auto* scene_browser_dock_widget = new QDockWidget{this};
   scene_browser_dock_widget->setWidget(scene_browser);
-  addDockWidget(Qt::LeftDockWidgetArea, scene_browser_dock_widget);
+  addDockWidget(Qt::LeftDockWidgetArea, scene_browser_dock_widget);*/
 
   QObject::connect(this,
                    &MainWindow::closeRequestReceived,
-                   scene_viewer,
-                   &SceneViewer::cleanup,
+                   view_widget,
+                   &ViewWidget::cleanup,
                    Qt::DirectConnection);
 }
 
@@ -90,9 +92,16 @@ void MainWindow::createMenus()
 
 void MainWindow::newDocument()
 {
-  auto* document     = m_app->newDocument();
+  /*auto* document     = m_app->newDocument();
   auto* scene_viewer = new SceneViewer{m_graphic_driver, document, m_config->viewer(), this};
-  m_center->addTab(scene_viewer->createView(m_center), document->name());
+  m_center->addTab(scene_viewer->createView(m_center), document->name());*/
+  auto* new_tab = new ViewWidget{m_config, this};
+  m_center->addTab(new_tab, "abc");
+  new_tab->show();
+  new_tab->hide();
+
+  QObject::connect(
+    this, &MainWindow::closeRequestReceived, new_tab, &ViewWidget::cleanup, Qt::DirectConnection);
 }
 
 void MainWindow::exit()

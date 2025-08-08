@@ -13,6 +13,7 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/view_widget.h"
 
+#include "cad_viewer/graphic_driver.h"
 #include "cad_viewer/widget_view_controller.h"
 
 #include <AIS_InteractiveContext.hxx>
@@ -53,12 +54,8 @@ public:
 
 namespace cad_viewer {
 
-ViewWidget::ViewWidget(const Handle(V3d_View) & view,
-                       const Handle(AIS_InteractiveContext) & context,
-                       QWidget* parent)
+ViewWidget::ViewWidget(Config* config, QWidget* parent)
   : QOpenGLWidget{parent}
-  , m_view{view}
-  , m_context{context}
   , m_view_controller{std::make_shared<WidgetViewController>(this)}
 {
   // Widget setup
@@ -76,10 +73,29 @@ ViewWidget::ViewWidget(const Handle(V3d_View) & view,
   setFormat(format);
 
   setAttribute(Qt::WA_NativeWindow); // Make sure winId() returns a valid handle later on
+                                     //
+  QObject::connect(QCoreApplication::instance(),
+                   &QCoreApplication::aboutToQuit,
+                   this,
+                   &ViewWidget::cleanup,
+                   Qt::DirectConnection);
 }
 
 void ViewWidget::initializeGL()
 {
+  m_graphic_driver = std::make_shared<GraphicDriver>();
+
+  Handle(V3d_Viewer) viewer = new V3d_Viewer{m_graphic_driver->driver()};
+  viewer->SetDefaultBackgroundColor(Quantity_NOC_LIGHTGRAY);
+  viewer->SetDefaultLights();
+  viewer->SetLightOn();
+  viewer->ActivateGrid(Aspect_GT_Rectangular, Aspect_GDM_Lines);
+
+  m_view = viewer->CreateView();
+  m_view->SetImmediateUpdate(false);
+
+  m_context = new AIS_InteractiveContext{viewer};
+
   const auto cur_rect = rect();
 
   Handle(OpenGl_Context) gl_context = new OpenGl_Context{};
@@ -152,10 +168,19 @@ Handle(AIS_AnimationCamera) ViewWidget::cameraAnimation() const
 
 void ViewWidget::cleanup()
 {
+  if (m_view.IsNull())
+  {
+    return;
+  }
+
+  makeCurrent();
+
   m_view->Remove();
   m_view.Nullify();
 
   m_context.Nullify();
+
+  doneCurrent();
 }
 
 void ViewWidget::mousePressEvent(QMouseEvent* event)

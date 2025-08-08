@@ -31,7 +31,7 @@ SceneViewWidget::SceneViewWidget(Handle(V3d_View) view,
   : QWidget{parent}
   , m_view{std::move(view)}
 {
-  m_view_widget = new ViewWidget{m_view, context};
+  // m_view_widget = new ViewWidget{m_view, context};
 
   auto* layout = new QVBoxLayout{this};
   layout->setContentsMargins(0, 0, 0, 0);

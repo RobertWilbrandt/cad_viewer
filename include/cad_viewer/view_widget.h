@@ -21,11 +21,16 @@
 #include <memory>
 
 class QSinglePointEvent;
-
 class V3d_View;
 class AIS_InteractiveContext;
 class AIS_AnimationCamera;
 class AIS_ViewController;
+class OpenGl_Context;
+namespace cad_viewer {
+class Config;
+class GraphicDriver;
+} // namespace cad_viewer
+
 
 namespace cad_viewer {
 
@@ -33,9 +38,7 @@ class ViewWidget : public QOpenGLWidget
 {
   Q_OBJECT
 public:
-  explicit ViewWidget(const Handle(V3d_View) & view,
-                      const Handle(AIS_InteractiveContext) & context,
-                      QWidget* parent = nullptr);
+  explicit ViewWidget(Config* config, QWidget* parent = nullptr);
 
   void initializeGL() override;
   void paintGL() override;
@@ -55,6 +58,9 @@ private:
   Aspect_VKeyMouse convert(Qt::MouseButtons buttons) const;
   Aspect_VKeyFlags convert(Qt::KeyboardModifiers modifiers) const;
 
+  std::shared_ptr<GraphicDriver> m_graphic_driver;
+
+  Handle(OpenGl_Context) m_gl_context;
   Handle(V3d_View) m_view;
   Handle(AIS_InteractiveContext) m_context;
 

@@ -20,7 +20,6 @@ class QCloseEvent;
 class QTabWidget;
 namespace cad_viewer {
 class Application;
-class GraphicDriver;
 class Config;
 } // namespace cad_viewer
 
@@ -31,9 +30,7 @@ class MainWindow : public QMainWindow
 {
   Q_OBJECT
 public:
-  explicit MainWindow(GraphicDriver* graphic_driver,
-                      Application* application,
-                      QWidget* parent = nullptr);
+  explicit MainWindow(Application* application, QWidget* parent = nullptr);
 
 signals:
   void closeRequestReceived();
@@ -48,7 +45,6 @@ private slots:
 private:
   void createMenus();
 
-  GraphicDriver* m_graphic_driver;
   Application* m_app;
 
   Config* m_config;
