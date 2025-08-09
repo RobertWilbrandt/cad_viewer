@@ -36,12 +36,11 @@ namespace cad_viewer {
 MainWindow::MainWindow(Application* application, QWidget* parent)
   : QMainWindow{parent}
   , m_app{application}
+  , m_config{new Config{this}}
 {
   createMenus();
 
-  Config* initial_config = new Config{this};
-
-  auto* tool_bar = new ToolBar{initial_config, this};
+  auto* tool_bar = new ToolBar{m_config, this};
   addToolBar(Qt::TopToolBarArea, tool_bar);
 
   m_center = new QTabWidget{this};
@@ -49,7 +48,7 @@ MainWindow::MainWindow(Application* application, QWidget* parent)
   QObject::connect(m_center, &QTabWidget::currentChanged, this, &MainWindow::tabChanged);
 
   auto* document    = application->newDocument();
-  auto* view_widget = new ViewWidget{initial_config, this};
+  auto* view_widget = new ViewWidget{m_config, this};
   m_center->addTab(view_widget, document->model()->name());
 
   setCentralWidget(m_center);
@@ -74,9 +73,8 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 void MainWindow::newDocument()
 {
-  auto* new_config = new Config{this};
-  auto* document   = m_app->newDocument();
-  auto* new_tab    = new ViewWidget{new_config, this};
+  auto* document = m_app->newDocument();
+  auto* new_tab  = new ViewWidget{m_config, this};
   QObject::connect(
     this, &MainWindow::closeRequestReceived, new_tab, &ViewWidget::cleanup, Qt::DirectConnection);
 
