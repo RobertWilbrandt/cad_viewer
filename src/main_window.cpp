@@ -21,6 +21,7 @@
 #include "cad_viewer/scene_browser.h"
 #include "cad_viewer/scene_viewer.h"
 #include "cad_viewer/tool_bar.h"
+#include "cad_viewer/view_multiplexer.h"
 #include "cad_viewer/view_widget.h"
 
 #include <QAction>
@@ -52,6 +53,10 @@ MainWindow::MainWindow(Application* application, QWidget* parent)
   m_center->addTab(view_widget, document->model()->name());
 
   setCentralWidget(m_center);
+
+  auto* view_multiplexer = new ViewMultiplexer{view_widget, this};
+  QObject::connect(
+    this, &MainWindow::centerViewChanged, view_multiplexer, &ViewMultiplexer::viewChanged);
 
   /*auto* scene_browser             = new SceneBrowser{scene_viewer->scene(), this};
   auto* scene_browser_dock_widget = new QDockWidget{this};
