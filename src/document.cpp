@@ -13,7 +13,8 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/document.h"
 
-#include <TDF_Tool.hxx>
+#include "cad_viewer/model.h"
+
 #include <TDataStd_Name.hxx>
 #include <TDocStd_Document.hxx>
 
@@ -22,28 +23,19 @@ namespace cad_viewer {
 Document::Document(Handle(TDocStd_Document) doc, QObject* parent)
   : QObject{parent}
   , m_doc{std::move(doc)}
+  , m_model{new Model{m_doc->GetData(), this}}
 {
-  TDataStd_Name::Set(m_doc->Main(), "New Document");
-
-  TDF_Tool::DeepDump(std::cout, m_doc->Main());
-}
-
-QString Document::name() const
-{
-  Handle(TDataStd_Name) name;
-  if (!m_doc->Main().FindAttribute(TDataStd_Name::GetID(), name))
-  {
-    throw std::runtime_error{"Missing document name attribute"};
-  }
-
-  std::u16string name_str{name->Get().ToExtString(),
-                          static_cast<std::size_t>(name->Get().Length())};
-  return QString::fromStdU16String(name_str);
+  m_model->setName("New Document");
 }
 
 Document::~Document()
 {
   m_doc->Close();
+}
+
+Model* Document::model() const
+{
+  return m_model;
 }
 
 } // namespace cad_viewer

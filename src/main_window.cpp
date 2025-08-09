@@ -16,6 +16,7 @@
 #include "cad_viewer/application.h"
 #include "cad_viewer/config.h"
 #include "cad_viewer/document.h"
+#include "cad_viewer/model.h"
 #include "cad_viewer/scene.h"
 #include "cad_viewer/scene_browser.h"
 #include "cad_viewer/scene_viewer.h"
@@ -49,7 +50,7 @@ MainWindow::MainWindow(Application* application, QWidget* parent)
 
   auto* document    = application->newDocument();
   auto* view_widget = new ViewWidget{initial_config, this};
-  m_center->addTab(view_widget, document->name());
+  m_center->addTab(view_widget, document->model()->name());
 
   setCentralWidget(m_center);
 
@@ -79,7 +80,7 @@ void MainWindow::newDocument()
   QObject::connect(
     this, &MainWindow::closeRequestReceived, new_tab, &ViewWidget::cleanup, Qt::DirectConnection);
 
-  m_center->addTab(new_tab, document->name());
+  m_center->addTab(new_tab, document->model()->name());
   m_center->setCurrentWidget(new_tab);
 }
 

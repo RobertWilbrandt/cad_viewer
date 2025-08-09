@@ -7,42 +7,40 @@
 /*!\file
  *
  * \author  Robert Wilbrandt <robert@stamm-wilbrandt.de>
- * \date    2025-08-06
+ * \date    2025-08-08
  *
  */
 //----------------------------------------------------------------------
-#ifndef CAD_VIEWER_DOCUMENT_H_INCLUDED
-#define CAD_VIEWER_DOCUMENT_H_INCLUDED
+#ifndef CAD_VIEWER_MODEL_H_INCLUDED
+#define CAD_VIEWER_MODEL_H_INCLUDED
 
 #include <QObject>
+#include <QString>
 #include <Standard_Handle.hxx>
 
-class TDocStd_Document;
-namespace cad_viewer {
-class Model;
-}
+class TDF_Data;
 
 
 namespace cad_viewer {
 
-class Document : public QObject
+class Model : public QObject
 {
   Q_OBJECT
+
+  Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
 public:
-  explicit Document(Handle(TDocStd_Document) doc, QObject* parent = nullptr);
-  ~Document();
+  explicit Model(Handle(TDF_Data) data, QObject* parent = nullptr);
 
-  [[nodiscard]] Model* model() const;
+  [[nodiscard]] QString name() const;
+  void setName(const QString& name);
 
-  Document(const Document&)            = delete;
-  Document& operator=(const Document&) = delete;
+signals:
+  void nameChanged(const QString&);
 
 private:
-  Handle(TDocStd_Document) m_doc;
-
-  Model* m_model;
+  Handle(TDF_Data) m_data;
 };
 
 } // namespace cad_viewer
 
-#endif // CAD_VIEWER_DOCUMENT_H_INCLUDED
+#endif // CAD_VIEWER_MODEL_H_INCLUDED
