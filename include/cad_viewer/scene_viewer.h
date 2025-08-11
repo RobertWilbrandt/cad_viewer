@@ -23,6 +23,7 @@ class AIS_InteractiveContext;
 class V3d_Viewer;
 namespace cad_viewer {
 class Config;
+class Document;
 class Scene;
 } // namespace cad_viewer
 
@@ -35,6 +36,7 @@ class SceneViewer : public QObject
 public:
   explicit SceneViewer(Handle(V3d_Viewer) viewer,
                        Handle(AIS_InteractiveContext) context,
+                       Document* document,
                        Config* config,
                        QObject* parent = nullptr);
 

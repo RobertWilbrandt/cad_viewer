@@ -56,9 +56,10 @@ public:
 
 namespace cad_viewer {
 
-ViewWidget::ViewWidget(Config* config, QWidget* parent)
+ViewWidget::ViewWidget(Config* config, Document* document, QWidget* parent)
   : QOpenGLWidget{parent}
   , m_config{config}
+  , m_document{document}
   , m_view_controller{std::make_shared<WidgetViewController>(this)}
 {
   // Widget setup
@@ -83,7 +84,7 @@ void ViewWidget::initializeGL()
   m_view->SetImmediateUpdate(false);
 
   m_context = new AIS_InteractiveContext{viewer};
-  m_viewer  = new SceneViewer{viewer, m_context, m_config, this};
+  m_viewer  = new SceneViewer{viewer, m_context, m_document, m_config, this};
   QObject::connect(m_viewer, &SceneViewer::viewUpdateRequested, this, &ViewWidget::updateView);
 
   const auto cur_rect = rect();

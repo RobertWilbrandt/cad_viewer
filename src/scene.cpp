@@ -25,8 +25,9 @@
 
 namespace cad_viewer {
 
-Scene::Scene(Handle(AIS_InteractiveContext) context, QObject* parent)
+Scene::Scene(Document* document, Handle(AIS_InteractiveContext) context, QObject* parent)
   : QObject{parent}
+  , m_document{document}
   , m_context{std::move(context)}
 {
   m_context->Display(
@@ -66,6 +67,11 @@ std::vector<SceneObject*> Scene::sceneObjects() const
   }
 
   return result;
+}
+
+Document* Scene::document() const
+{
+  return m_document;
 }
 
 Handle(AIS_Shape) Scene::createConstructionPlane(const QString& name,

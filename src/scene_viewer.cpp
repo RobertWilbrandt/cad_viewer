@@ -22,6 +22,7 @@ namespace cad_viewer {
 
 SceneViewer::SceneViewer(Handle(V3d_Viewer) viewer,
                          Handle(AIS_InteractiveContext) context,
+                         Document* document,
                          Config* config,
                          QObject* parent)
   : QObject{parent}
@@ -40,7 +41,7 @@ SceneViewer::SceneViewer(Handle(V3d_Viewer) viewer,
       break;
   }
 
-  m_scene = new Scene{m_context, this};
+  m_scene = new Scene{document, m_context, this};
 
   QObject::connect(
     config->viewer(), &ViewerConfig::gridTypeChanged, this, &SceneViewer::setGridType);

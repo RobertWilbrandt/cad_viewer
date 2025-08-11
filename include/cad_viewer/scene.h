@@ -23,6 +23,10 @@ class AIS_Shape;
 class gp_Pnt;
 class gp_Dir;
 class Prs3d_Drawer;
+namespace cad_viewer {
+class Document;
+}
+
 
 namespace cad_viewer {
 
@@ -32,9 +36,13 @@ class Scene : public QObject
 {
   Q_OBJECT
 public:
-  explicit Scene(Handle(AIS_InteractiveContext) context, QObject* parent = nullptr);
+  explicit Scene(Document* document,
+                 Handle(AIS_InteractiveContext) context,
+                 QObject* parent = nullptr);
 
   std::vector<SceneObject*> sceneObjects() const;
+
+  [[nodiscard]] Document* document() const;
 
 signals:
   void objectAdded(SceneObject* object);
@@ -45,6 +53,7 @@ private:
                                             const gp_Dir& dir,
                                             const gp_Dir& x_dir);
 
+  Document* m_document;
   Handle(AIS_InteractiveContext) m_context;
 };
 

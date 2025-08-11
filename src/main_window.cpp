@@ -49,7 +49,7 @@ MainWindow::MainWindow(Application* application, QWidget* parent)
   QObject::connect(m_center, &QTabWidget::currentChanged, this, &MainWindow::tabChanged);
 
   auto* document    = application->newDocument();
-  auto* view_widget = new ViewWidget{m_config, this};
+  auto* view_widget = new ViewWidget{m_config, document, this};
   m_center->addTab(view_widget, document->model()->name());
 
   setCentralWidget(m_center);
@@ -79,7 +79,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
 void MainWindow::newDocument()
 {
   auto* document = m_app->newDocument();
-  auto* new_tab  = new ViewWidget{m_config, this};
+  auto* new_tab  = new ViewWidget{m_config, document, this};
   QObject::connect(
     this, &MainWindow::closeRequestReceived, new_tab, &ViewWidget::cleanup, Qt::DirectConnection);
 

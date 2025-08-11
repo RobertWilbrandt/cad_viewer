@@ -29,6 +29,7 @@ class OpenGl_Context;
 class V3d_View;
 namespace cad_viewer {
 class Config;
+class Document;
 class GraphicDriver;
 class SceneViewer;
 } // namespace cad_viewer
@@ -42,7 +43,7 @@ class ViewWidget : public QOpenGLWidget
 
   Q_PROPERTY(bool initialized READ initialized NOTIFY initializationDone)
 public:
-  explicit ViewWidget(Config* config, QWidget* parent = nullptr);
+  explicit ViewWidget(Config* config, Document* document, QWidget* parent = nullptr);
 
   void initializeGL() override;
   void paintGL() override;
@@ -81,6 +82,7 @@ private:
   Handle(AIS_InteractiveContext) m_context;
 
   Config* m_config;
+  Document* m_document;
   SceneViewer* m_viewer;
 
   std::shared_ptr<AIS_ViewController> m_view_controller;
