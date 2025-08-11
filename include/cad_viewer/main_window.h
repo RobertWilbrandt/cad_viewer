@@ -32,19 +32,11 @@ class MainWindow : public QMainWindow
 public:
   explicit MainWindow(Application* application, QWidget* parent = nullptr);
 
-signals:
-  void centerViewChanged(ViewWidget* view);
-
-  void closeRequestReceived();
-
 protected:
   void closeEvent(QCloseEvent* event) override;
 
 private slots:
-  void newDocument();
   void exit();
-
-  void tabChanged(int index);
 
 private:
   void createMenus();

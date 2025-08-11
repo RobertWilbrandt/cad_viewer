@@ -17,6 +17,7 @@
 #include "cad_viewer/config.h"
 
 #include <QApplication>
+#include <QObject>
 #include <Standard_Handle.hxx>
 
 class TDocStd_Application;
@@ -27,17 +28,26 @@ class Document;
 
 namespace cad_viewer {
 
-class Application
+class Application : public QObject
 {
+  Q_OBJECT
 public:
   explicit Application(int argc, char* argv[]);
 
   [[nodiscard]] Config& config();
   [[nodiscard]] const Config& config() const;
 
-  [[nodiscard]] Document* newDocument();
-
   [[nodiscard]] int exec();
+
+signals:
+  void documentOpened(Document* document);
+
+  void shutdownRequested();
+
+public slots:
+  void newDocument();
+
+  void requestShutdown();
 
 private:
   Config m_config;

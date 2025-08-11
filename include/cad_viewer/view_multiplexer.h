@@ -14,11 +14,13 @@
 #ifndef CAD_VIEWER_VIEW_MULTIPLEXER_H_INCLUDED
 #define CAD_VIEWER_VIEW_MULTIPLEXER_H_INCLUDED
 
-#include <QObject>
-
 #include <QMetaObject>
+#include <QObject>
+#include <QTabWidget>
 
 namespace cad_viewer {
+class Application;
+class Document;
 class Scene;
 class SceneViewer;
 class ViewWidget;
@@ -27,21 +29,24 @@ class ViewWidget;
 
 namespace cad_viewer {
 
-class ViewMultiplexer : public QObject
+class ViewMultiplexer : public QTabWidget
 {
   Q_OBJECT
 public:
-  explicit ViewMultiplexer(ViewWidget* initial_view, QObject* parent = nullptr);
+  explicit ViewMultiplexer(Application* app, QWidget* parent = nullptr);
 
   [[nodiscard]] ViewWidget* currentView() const;
 
-public slots:
-  void viewChanged(ViewWidget* view);
+private slots:
+  void showDocument(Document* document);
   void viewInitialized();
 
-private:
-  QMetaObject::Connection m_cur_initialization;
+  void tabChanged(int index);
 
+private:
+  Application* m_app;
+
+  QMetaObject::Connection m_cur_initialization;
   ViewWidget* m_cur_view;
 };
 

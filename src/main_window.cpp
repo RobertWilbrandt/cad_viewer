@@ -43,58 +43,26 @@ MainWindow::MainWindow(Application* application, QWidget* parent)
   auto* tool_bar = new ToolBar{&m_app->config(), this};
   addToolBar(Qt::TopToolBarArea, tool_bar);
 
-  m_center = new QTabWidget{this};
-  m_center->setTabPosition(QTabWidget::South);
-  QObject::connect(m_center, &QTabWidget::currentChanged, this, &MainWindow::tabChanged);
-
-  auto* document    = application->newDocument();
-  auto* view_widget = new ViewWidget{&m_app->config(), document, this};
-  m_center->addTab(view_widget, document->model()->name());
-
-  setCentralWidget(m_center);
-
-  auto* view_multiplexer = new ViewMultiplexer{view_widget, this};
-  QObject::connect(
-    this, &MainWindow::centerViewChanged, view_multiplexer, &ViewMultiplexer::viewChanged);
+  auto* view_multiplexer = new ViewMultiplexer{m_app, this};
+  setCentralWidget(view_multiplexer);
 
   /*auto* scene_browser             = new SceneBrowser{scene_viewer->scene(), this};
   auto* scene_browser_dock_widget = new QDockWidget{this};
   scene_browser_dock_widget->setWidget(scene_browser);
   addDockWidget(Qt::LeftDockWidgetArea, scene_browser_dock_widget);*/
 
-  QObject::connect(this,
-                   &MainWindow::closeRequestReceived,
-                   view_widget,
-                   &ViewWidget::cleanup,
-                   Qt::DirectConnection);
+  m_app->newDocument();
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-  emit closeRequestReceived();
+  m_app->requestShutdown();
   QMainWindow::closeEvent(event);
-}
-
-void MainWindow::newDocument()
-{
-  auto* document = m_app->newDocument();
-  auto* new_tab  = new ViewWidget{&m_app->config(), document, this};
-  QObject::connect(
-    this, &MainWindow::closeRequestReceived, new_tab, &ViewWidget::cleanup, Qt::DirectConnection);
-
-  m_center->addTab(new_tab, document->model()->name());
-  m_center->setCurrentWidget(new_tab);
 }
 
 void MainWindow::exit()
 {
   QCoreApplication::quit();
-}
-
-void MainWindow::tabChanged(int index)
-{
-  auto* view_widget = static_cast<ViewWidget*>(m_center->widget(index));
-  emit centerViewChanged(view_widget);
 }
 
 void MainWindow::createMenus()
@@ -104,7 +72,7 @@ void MainWindow::createMenus()
   auto new_action = new QAction{tr("&New"), this};
   new_action->setShortcut(QKeySequence::New);
   new_action->setStatusTip(tr("Create new document"));
-  QObject::connect(new_action, &QAction::triggered, this, &MainWindow::newDocument);
+  QObject::connect(new_action, &QAction::triggered, m_app, &Application::newDocument);
   file_menu->addAction(new_action);
 
   auto* exit_action =

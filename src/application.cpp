@@ -36,16 +36,23 @@ const Config& Application::config() const
   return m_config;
 }
 
-Document* Application::newDocument()
-{
-  Handle(TDocStd_Document) document;
-  m_app->NewDocument("", document);
-  return new Document{document, &m_qapp};
-}
-
 int Application::exec()
 {
   return m_qapp.exec();
+}
+
+void Application::newDocument()
+{
+  Handle(TDocStd_Document) document;
+  m_app->NewDocument("", document);
+
+  auto* new_document = new Document{document, &m_qapp};
+  emit documentOpened(new_document);
+}
+
+void Application::requestShutdown()
+{
+  emit shutdownRequested();
 }
 
 } // namespace cad_viewer

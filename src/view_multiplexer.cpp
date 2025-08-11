@@ -13,15 +13,22 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/view_multiplexer.h"
 
+#include "cad_viewer/application.h"
+#include "cad_viewer/document.h"
+#include "cad_viewer/model.h"
 #include "cad_viewer/scene_viewer.h"
 #include "cad_viewer/view_widget.h"
 
 namespace cad_viewer {
 
-ViewMultiplexer::ViewMultiplexer(ViewWidget* initial_view, QObject* parent)
-  : QObject{parent}
+ViewMultiplexer::ViewMultiplexer(Application* app, QWidget* parent)
+  : QTabWidget{parent}
+  , m_app{app}
 {
-  viewChanged(initial_view);
+  setTabPosition(QTabWidget::South);
+  QObject::connect(this, &QTabWidget::currentChanged, this, &ViewMultiplexer::tabChanged);
+
+  QObject::connect(m_app, &Application::documentOpened, this, &ViewMultiplexer::showDocument);
 }
 
 ViewWidget* ViewMultiplexer::currentView() const
@@ -29,8 +36,29 @@ ViewWidget* ViewMultiplexer::currentView() const
   return m_cur_view;
 }
 
-void ViewMultiplexer::viewChanged(ViewWidget* view)
+void ViewMultiplexer::showDocument(Document* document)
 {
+  auto* view_widget = new ViewWidget{&m_app->config(), document, this};
+  QObject::connect(m_app,
+                   &Application::shutdownRequested,
+                   view_widget,
+                   &ViewWidget::cleanup,
+                   Qt::DirectConnection);
+
+  addTab(view_widget, document->model()->name());
+  setCurrentWidget(view_widget);
+}
+
+void ViewMultiplexer::viewInitialized()
+{
+  m_cur_view = static_cast<ViewWidget*>(sender());
+  QObject::disconnect(m_cur_initialization);
+}
+
+void ViewMultiplexer::tabChanged(int index)
+{
+  auto* view = static_cast<ViewWidget*>(widget(index));
+
   if (view->initialized())
   {
     m_cur_view = view;
@@ -44,12 +72,6 @@ void ViewMultiplexer::viewChanged(ViewWidget* view)
     m_cur_initialization = QObject::connect(
       view, &ViewWidget::initializationDone, this, &ViewMultiplexer::viewInitialized);
   }
-}
-
-void ViewMultiplexer::viewInitialized()
-{
-  m_cur_view = static_cast<ViewWidget*>(sender());
-  QObject::disconnect(m_cur_initialization);
 }
 
 } // namespace cad_viewer
