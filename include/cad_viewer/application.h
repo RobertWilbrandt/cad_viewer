@@ -14,13 +14,15 @@
 #ifndef CAD_VIEWER_APPLICATION_H_INCLUDED
 #define CAD_VIEWER_APPLICATION_H_INCLUDED
 
+#include "cad_viewer/config.h"
+
 #include <QApplication>
 #include <Standard_Handle.hxx>
 
 class TDocStd_Application;
 namespace cad_viewer {
 class Document;
-}
+} // namespace cad_viewer
 
 
 namespace cad_viewer {
@@ -30,11 +32,16 @@ class Application
 public:
   explicit Application(int argc, char* argv[]);
 
+  [[nodiscard]] Config& config();
+  [[nodiscard]] const Config& config() const;
+
   [[nodiscard]] Document* newDocument();
 
   [[nodiscard]] int exec();
 
 private:
+  Config m_config;
+
   QApplication m_qapp;
   Handle(TDocStd_Application) m_app;
 };

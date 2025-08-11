@@ -26,6 +26,16 @@ Application::Application(int argc, char* argv[])
 {
 }
 
+Config& Application::config()
+{
+  return m_config;
+}
+
+const Config& Application::config() const
+{
+  return m_config;
+}
+
 Document* Application::newDocument()
 {
   Handle(TDocStd_Document) document;
