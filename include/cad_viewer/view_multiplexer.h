@@ -16,9 +16,13 @@
 
 #include <QObject>
 
+#include <QMetaObject>
+
 namespace cad_viewer {
+class Scene;
+class SceneViewer;
 class ViewWidget;
-}
+} // namespace cad_viewer
 
 
 namespace cad_viewer {
@@ -33,8 +37,11 @@ public:
 
 public slots:
   void viewChanged(ViewWidget* view);
+  void viewInitialized();
 
 private:
+  QMetaObject::Connection m_cur_initialization;
+
   ViewWidget* m_cur_view;
 };
 

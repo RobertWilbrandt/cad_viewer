@@ -79,7 +79,6 @@ void ViewWidget::initializeGL()
   viewer->SetDefaultLights();
   viewer->SetLightOn();
 
-
   m_view = viewer->CreateView();
   m_view->SetImmediateUpdate(false);
 
@@ -109,6 +108,9 @@ void ViewWidget::initializeGL()
 
   // Create view cube
   m_context->Display(createDefaultViewCube(), 0, 0, false);
+
+  m_initialized = true;
+  emit initializationDone();
 }
 
 void ViewWidget::paintGL()
@@ -153,6 +155,11 @@ void ViewWidget::paintGL()
 
   m_view->InvalidateImmediate();
   m_view_controller->FlushViewEvents(m_context, m_view, true);
+}
+
+bool ViewWidget::initialized() const
+{
+  return m_initialized;
 }
 
 void ViewWidget::cleanup()

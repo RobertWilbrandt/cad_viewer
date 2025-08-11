@@ -40,7 +40,7 @@ SceneViewer::SceneViewer(Handle(V3d_Viewer) viewer,
       break;
   }
 
-  m_scene = std::make_shared<Scene>(m_context, this);
+  m_scene = new Scene{m_context, this};
 
   QObject::connect(
     config->viewer(), &ViewerConfig::gridTypeChanged, this, &SceneViewer::setGridType);
@@ -48,9 +48,9 @@ SceneViewer::SceneViewer(Handle(V3d_Viewer) viewer,
   emit viewUpdateRequested();
 }
 
-Scene& SceneViewer::scene() const
+Scene* SceneViewer::scene() const
 {
-  return *m_scene;
+  return m_scene;
 }
 
 void SceneViewer::setGridType(ViewerConfig::GridType grid_type)

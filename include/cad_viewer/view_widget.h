@@ -39,15 +39,22 @@ namespace cad_viewer {
 class ViewWidget : public QOpenGLWidget
 {
   Q_OBJECT
+
+  Q_PROPERTY(bool initialized READ initialized NOTIFY initializationDone)
 public:
   explicit ViewWidget(Config* config, QWidget* parent = nullptr);
 
   void initializeGL() override;
   void paintGL() override;
 
+  [[nodiscard]] bool initialized() const;
+
   SceneViewer* viewer() const;
 
   void cleanup();
+
+signals:
+  void initializationDone();
 
 public slots:
   void updateView();
@@ -66,6 +73,8 @@ private:
   Aspect_VKeyFlags convert(Qt::KeyboardModifiers modifiers) const;
 
   std::shared_ptr<GraphicDriver> m_graphic_driver;
+
+  bool m_initialized = false;
 
   Handle(OpenGl_Context) m_gl_context;
   Handle(V3d_View) m_view;

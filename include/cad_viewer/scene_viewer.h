@@ -18,7 +18,6 @@
 
 #include <QObject>
 #include <Standard_Handle.hxx>
-#include <memory>
 
 class AIS_InteractiveContext;
 class V3d_Viewer;
@@ -39,7 +38,7 @@ public:
                        Config* config,
                        QObject* parent = nullptr);
 
-  [[nodiscard]] Scene& scene() const;
+  [[nodiscard]] Scene* scene() const;
 
 signals:
   void viewUpdateRequested();
@@ -51,7 +50,7 @@ private:
   Handle(V3d_Viewer) m_viewer;
   Handle(AIS_InteractiveContext) m_context;
 
-  std::shared_ptr<Scene> m_scene;
+  Scene* m_scene;
 };
 
 } // namespace cad_viewer
