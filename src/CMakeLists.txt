@@ -15,6 +15,7 @@ target_sources(cad_viewer
     main.cpp
     main_window.cpp
     model.cpp
+    model_interface.cpp
     object_owner.cpp
     scene.cpp
     scene_browser.cpp
@@ -38,6 +39,7 @@ target_sources(cad_viewer
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/graphic_driver.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/main_window.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/model.h
+    ${CMAKE_SOURCE_DIR}/include/cad_viewer/model_interface.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/object_owner.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/scene.h
     ${CMAKE_SOURCE_DIR}/include/cad_viewer/scene_browser.h

@@ -37,6 +37,9 @@ public:
 
   [[nodiscard]] ViewWidget* currentView() const;
 
+signals:
+  void currentViewChanged(ViewWidget* view);
+
 private slots:
   void showDocument(Document* document);
   void viewInitialized();

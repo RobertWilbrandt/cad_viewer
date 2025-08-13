@@ -17,6 +17,7 @@
 #include "cad_viewer/config.h"
 #include "cad_viewer/document.h"
 #include "cad_viewer/model.h"
+#include "cad_viewer/model_interface.h"
 #include "cad_viewer/scene.h"
 #include "cad_viewer/scene_browser.h"
 #include "cad_viewer/scene_viewer.h"
@@ -40,11 +41,17 @@ MainWindow::MainWindow(Application* application, QWidget* parent)
 {
   createMenus();
 
-  auto* tool_bar = new ToolBar{&m_app->config(), this};
-  addToolBar(Qt::TopToolBarArea, tool_bar);
-
   auto* view_multiplexer = new ViewMultiplexer{m_app, this};
   setCentralWidget(view_multiplexer);
+
+  auto* model_interface = new ModelInterface{this};
+  QObject::connect(view_multiplexer,
+                   &ViewMultiplexer::currentViewChanged,
+                   model_interface,
+                   &ModelInterface::setCurrentView);
+
+  auto* tool_bar = new ToolBar{model_interface, &m_app->config(), this};
+  addToolBar(Qt::TopToolBarArea, tool_bar);
 
   /*auto* scene_browser             = new SceneBrowser{scene_viewer->scene(), this};
   auto* scene_browser_dock_widget = new QDockWidget{this};

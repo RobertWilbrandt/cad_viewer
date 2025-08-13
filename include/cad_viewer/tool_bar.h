@@ -18,7 +18,8 @@
 
 namespace cad_viewer {
 class Config;
-}
+class ModelInterface;
+} // namespace cad_viewer
 
 namespace cad_viewer {
 
@@ -26,7 +27,9 @@ class ToolBar : public QToolBar
 {
   Q_OBJECT
 public:
-  explicit ToolBar(const Config* config, QWidget* parent = nullptr);
+  explicit ToolBar(ModelInterface* model_interface,
+                   const Config* config,
+                   QWidget* parent = nullptr);
 };
 
 } // namespace cad_viewer

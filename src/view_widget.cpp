@@ -163,6 +163,11 @@ bool ViewWidget::initialized() const
   return m_initialized;
 }
 
+SceneViewer* ViewWidget::viewer() const
+{
+  return m_viewer;
+}
+
 void ViewWidget::cleanup()
 {
   if (m_view.IsNull())

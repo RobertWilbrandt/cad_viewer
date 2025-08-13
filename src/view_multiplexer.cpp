@@ -53,6 +53,8 @@ void ViewMultiplexer::viewInitialized()
 {
   m_cur_view = static_cast<ViewWidget*>(sender());
   QObject::disconnect(m_cur_initialization);
+
+  emit currentViewChanged(m_cur_view);
 }
 
 void ViewMultiplexer::tabChanged(int index)
@@ -62,6 +64,7 @@ void ViewMultiplexer::tabChanged(int index)
   if (view->initialized())
   {
     m_cur_view = view;
+    emit currentViewChanged(view);
   }
   else
   {

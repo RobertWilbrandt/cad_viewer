@@ -7,31 +7,37 @@
 /*!\file
  *
  * \author  Robert Wilbrandt <robert@stamm-wilbrandt.de>
- * \date    2025-08-07
+ * \date    2025-08-13
  *
  */
 //----------------------------------------------------------------------
-#ifndef CAD_VIEWER_TOOL_BAR_MODEL_H_INCLUDED
-#define CAD_VIEWER_TOOL_BAR_MODEL_H_INCLUDED
+#ifndef CAD_VIEWER_MODEL_INTERFACE_H_INCLUDED
+#define CAD_VIEWER_MODEL_INTERFACE_H_INCLUDED
 
-#include <QWidget>
+#include <QObject>
 
 namespace cad_viewer {
-class ModelInterface;
-}
+class ViewWidget;
+class Model;
+} // namespace cad_viewer
 
 
-namespace cad_viewer::tool_bar {
+namespace cad_viewer {
 
-class Model : public QWidget
+class ModelInterface : public QObject
 {
-  Q_OBJECT
 public:
-  explicit Model(ModelInterface* model_interface, QWidget* parent = nullptr);
+  explicit ModelInterface(QObject* parent = nullptr);
+
+public slots:
+  void setCurrentView(ViewWidget* view);
 
 private:
+  Model* currentModel() const;
+
+  ViewWidget* m_cur_view;
 };
 
-} // namespace cad_viewer::tool_bar
+} // namespace cad_viewer
 
-#endif // CAD_VIEWER_TOOL_BAR_MODEL_H_INCLUDED
+#endif // CAD_VIEWER_MODEL_INTERFACE_H_INCLUDED

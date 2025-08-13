@@ -21,14 +21,14 @@
 
 namespace cad_viewer {
 
-ToolBar::ToolBar(const Config* config, QWidget* parent)
+ToolBar::ToolBar(ModelInterface* model_interface, const Config* config, QWidget* parent)
   : QToolBar{parent}
 {
   setFloatable(false);
   setMovable(false);
 
   auto* tab_bar = new QTabWidget{this};
-  tab_bar->addTab(new tool_bar::Model{this}, tr("&Model"));
+  tab_bar->addTab(new tool_bar::Model{model_interface, this}, tr("&Model"));
   tab_bar->addTab(new tool_bar::View{config->viewer(), this}, tr("&View"));
 
   addWidget(tab_bar);

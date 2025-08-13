@@ -15,7 +15,7 @@
 
 namespace cad_viewer::tool_bar {
 
-Model::Model(QWidget* parent)
+Model::Model(ModelInterface* model_interface, QWidget* parent)
   : QWidget{parent}
 {
 }
