@@ -84,8 +84,9 @@ void ViewWidget::initializeGL()
   m_view->SetImmediateUpdate(false);
 
   m_context = new AIS_InteractiveContext{viewer};
-  m_viewer  = new SceneViewer{viewer, m_context, m_document, m_config, this};
-  QObject::connect(m_viewer, &SceneViewer::viewUpdateRequested, this, &ViewWidget::updateView);
+  m_viewer  = std::make_shared<SceneViewer>(viewer, m_context, m_document, m_config);
+  QObject::connect(
+    m_viewer.get(), &SceneViewer::viewUpdateRequested, this, &ViewWidget::updateView);
 
   const auto cur_rect = rect();
 
@@ -163,19 +164,15 @@ bool ViewWidget::initialized() const
   return m_initialized;
 }
 
-SceneViewer* ViewWidget::viewer() const
-{
-  return m_viewer;
-}
-
 void ViewWidget::cleanup()
 {
   if (m_view.IsNull())
   {
     return;
   }
-
   makeCurrent();
+
+  m_viewer.reset();
 
   m_view->Remove();
   m_view.Nullify();
@@ -183,6 +180,11 @@ void ViewWidget::cleanup()
   m_context.Nullify();
 
   doneCurrent();
+}
+
+std::weak_ptr<SceneViewer> ViewWidget::viewer() const
+{
+  return m_viewer;
 }
 
 void ViewWidget::updateView()

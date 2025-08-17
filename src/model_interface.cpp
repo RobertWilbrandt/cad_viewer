@@ -52,8 +52,12 @@ Model* ModelInterface::currentModel() const
     return nullptr;
   }
 
-  auto* scene = m_cur_view->viewer()->scene();
-  return scene->document()->model();
+  const auto viewer = m_cur_view->viewer().lock();
+  if (!viewer)
+  {
+    return nullptr;
+  }
+  return viewer->scene()->document()->model();
 }
 
 } // namespace cad_viewer

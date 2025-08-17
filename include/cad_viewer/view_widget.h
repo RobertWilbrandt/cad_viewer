@@ -50,9 +50,9 @@ public:
 
   [[nodiscard]] bool initialized() const;
 
-  SceneViewer* viewer() const;
-
   void cleanup();
+
+  std::weak_ptr<SceneViewer> viewer() const;
 
 signals:
   void initializationDone();
@@ -83,7 +83,7 @@ private:
 
   Config* m_config;
   Document* m_document;
-  SceneViewer* m_viewer;
+  std::shared_ptr<SceneViewer> m_viewer;
 
   std::shared_ptr<AIS_ViewController> m_view_controller;
 };

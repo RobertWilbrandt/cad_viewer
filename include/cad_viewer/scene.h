@@ -41,6 +41,10 @@ public:
   explicit Scene(Document* document,
                  Handle(AIS_InteractiveContext) context,
                  QObject* parent = nullptr);
+  ~Scene();
+
+  Scene(const Scene&)            = delete;
+  Scene& operator=(const Scene&) = delete;
 
   std::vector<SceneObject*> sceneObjects() const;
 
@@ -60,7 +64,6 @@ private:
 
   Document* m_document;
   Handle(AIS_InteractiveContext) m_context;
-  Handle(TPrsStd_AISViewer) m_model_viewer;
 };
 
 } // namespace cad_viewer

@@ -35,7 +35,8 @@ Scene::Scene(Document* document, Handle(AIS_InteractiveContext) context, QObject
   , m_document{document}
   , m_context{std::move(context)}
 {
-  m_model_viewer = TPrsStd_AISViewer::New(m_document->model()->main(), m_context);
+  Handle(TPrsStd_AISViewer) m_model_viewer =
+    TPrsStd_AISViewer::New(m_document->model()->main(), m_context);
   QObject::connect(m_document->model(), &Model::shapeAdded, this, &Scene::addPresentation);
 
   m_context->Display(
@@ -54,6 +55,8 @@ Scene::Scene(Document* document, Handle(AIS_InteractiveContext) context, QObject
     0,
     false);
 }
+
+Scene::~Scene() {}
 
 std::vector<SceneObject*> Scene::sceneObjects() const
 {
