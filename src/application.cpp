@@ -17,6 +17,7 @@
 
 #include <TDocStd_Application.hxx>
 #include <TDocStd_Document.hxx>
+#include <TPrsStd_DriverTable.hxx>
 
 namespace cad_viewer {
 
@@ -24,6 +25,13 @@ Application::Application(int argc, char* argv[])
   : m_qapp{argc, argv}
   , m_app{new TDocStd_Application{}}
 {
+  TPrsStd_DriverTable::Get();
+}
+
+Application::~Application()
+{
+  Handle(TPrsStd_DriverTable) driver_table = TPrsStd_DriverTable::Get();
+  driver_table->Clear();
 }
 
 Config& Application::config()

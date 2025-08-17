@@ -17,7 +17,8 @@
 extern "C" const char* __lsan_default_suppressions()
 {
   return "leak:OpenGl_View::prepareFrameBuffers\n"
-         "leak:OpenGl_FrameBuffer::OpenGl_FrameBuffer";
+         "leak:OpenGl_FrameBuffer::OpenGl_FrameBuffer\n"
+         "leak:TPrsStd_DriverTable::Get()";
 }
 
 #endif

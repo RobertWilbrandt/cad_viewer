@@ -22,6 +22,7 @@
 #include <AIS_Shape.hxx>
 #include <BRepBuilderAPI_MakeFace.hxx>
 #include <Geom_Plane.hxx>
+#include <TDF_ChildIterator.hxx>
 #include <TNaming_NamedShape.hxx>
 #include <TPrsStd_AISPresentation.hxx>
 #include <TPrsStd_AISViewer.hxx>
@@ -56,7 +57,18 @@ Scene::Scene(Document* document, Handle(AIS_InteractiveContext) context, QObject
     false);
 }
 
-Scene::~Scene() {}
+Scene::~Scene()
+{
+  auto main_label = m_document->model()->main();
+
+  cleanupPresentations(main_label);
+
+  Handle(TPrsStd_AISViewer) viewer;
+  if (TPrsStd_AISViewer::Find(main_label, viewer))
+  {
+    main_label.ForgetAttribute(viewer);
+  }
+}
 
 std::vector<SceneObject*> Scene::sceneObjects() const
 {
@@ -111,6 +123,26 @@ Handle(AIS_Shape) Scene::createConstructionPlane(const QString& name,
 
   emit objectAdded(scene_object);
   return plane;
+}
+
+void Scene::cleanupPresentations(const TDF_Label& label)
+{
+  Handle(TPrsStd_AISPresentation) presentation;
+  if (label.FindAttribute(TPrsStd_AISPresentation::GetID(), presentation))
+  {
+    presentation->Erase(false);
+  }
+
+  for (TDF_ChildIterator it{label, true}; it.More(); it.Next())
+  {
+    auto label = it.Value();
+    Handle(TPrsStd_AISPresentation) presentation;
+    if (label.FindAttribute(TPrsStd_AISPresentation::GetID(), presentation))
+    {
+      presentation->Erase(false);
+      label.ForgetAttribute(presentation);
+    }
+  }
 }
 
 } // namespace cad_viewer

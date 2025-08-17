@@ -33,6 +33,10 @@ class Application : public QObject
   Q_OBJECT
 public:
   explicit Application(int argc, char* argv[]);
+  ~Application();
+
+  Application(const Application&)            = delete;
+  Application& operator=(const Application&) = delete;
 
   [[nodiscard]] Config& config();
   [[nodiscard]] const Config& config() const;

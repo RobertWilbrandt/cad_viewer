@@ -62,6 +62,8 @@ private:
                                             const gp_Dir& dir,
                                             const gp_Dir& x_dir);
 
+  void cleanupPresentations(const TDF_Label& label);
+
   Document* m_document;
   Handle(AIS_InteractiveContext) m_context;
 };
