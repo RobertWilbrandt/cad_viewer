@@ -13,6 +13,8 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/scene.h"
 
+#include "cad_viewer/document.h"
+#include "cad_viewer/model.h"
 #include "cad_viewer/object_owner.h"
 #include "cad_viewer/scene_object.h"
 
@@ -20,6 +22,9 @@
 #include <AIS_Shape.hxx>
 #include <BRepBuilderAPI_MakeFace.hxx>
 #include <Geom_Plane.hxx>
+#include <TNaming_NamedShape.hxx>
+#include <TPrsStd_AISPresentation.hxx>
+#include <TPrsStd_AISViewer.hxx>
 #include <TopoDS_Face.hxx>
 #include <gp_Ax3.hxx>
 
@@ -30,6 +35,9 @@ Scene::Scene(Document* document, Handle(AIS_InteractiveContext) context, QObject
   , m_document{document}
   , m_context{std::move(context)}
 {
+  m_model_viewer = TPrsStd_AISViewer::New(m_document->model()->main(), m_context);
+  QObject::connect(m_document->model(), &Model::shapeAdded, this, &Scene::addPresentation);
+
   m_context->Display(
     createConstructionPlane("yz", gp_Pnt{0, 0, 0}, gp_Dir{1, 0, 0}, gp_Dir{0, 1, 0}),
     AIS_Shaded,
@@ -72,6 +80,14 @@ std::vector<SceneObject*> Scene::sceneObjects() const
 Document* Scene::document() const
 {
   return m_document;
+}
+
+void Scene::addPresentation(TDF_Label label)
+{
+  Handle(TPrsStd_AISPresentation) presentation =
+    TPrsStd_AISPresentation::Set(label, TNaming_NamedShape::GetID());
+  presentation->SetMode(AIS_Shaded);
+  presentation->Display(false);
 }
 
 Handle(AIS_Shape) Scene::createConstructionPlane(const QString& name,

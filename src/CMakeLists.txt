@@ -64,6 +64,7 @@ target_link_libraries(cad_viewer
     TKV3d
     TKernel
     TKStd
+    TKVCAF
 )
 target_compile_features(cad_viewer
   PRIVATE

@@ -16,6 +16,7 @@
 
 #include <QObject>
 #include <Standard_Handle.hxx>
+#include <TDF_Label.hxx>
 #include <vector>
 
 class AIS_InteractiveContext;
@@ -23,6 +24,7 @@ class AIS_Shape;
 class gp_Pnt;
 class gp_Dir;
 class Prs3d_Drawer;
+class TPrsStd_AISViewer;
 namespace cad_viewer {
 class Document;
 }
@@ -47,6 +49,9 @@ public:
 signals:
   void objectAdded(SceneObject* object);
 
+private slots:
+  void addPresentation(TDF_Label label);
+
 private:
   Handle(AIS_Shape) createConstructionPlane(const QString& name,
                                             const gp_Pnt& position,
@@ -55,6 +60,7 @@ private:
 
   Document* m_document;
   Handle(AIS_InteractiveContext) m_context;
+  Handle(TPrsStd_AISViewer) m_model_viewer;
 };
 
 } // namespace cad_viewer

@@ -68,6 +68,11 @@ void Model::setName(const QString& name)
   }
 }
 
+TDF_Label Model::main() const
+{
+  return m_data->Root();
+}
+
 void Model::createSolid(const TopoDS_Solid& solid)
 {
   TDF_Label label = m_data->Root().NewChild();
@@ -82,6 +87,8 @@ void Model::createSolid(const TopoDS_Solid& solid)
     TNaming_Builder child_builder{child_label};
     child_builder.Generated(face);
   }
+
+  emit shapeAdded(label);
 
   TDF_Tool::DeepDump(std::cout, m_data);
 }

@@ -17,6 +17,7 @@
 #include <QObject>
 #include <QString>
 #include <Standard_Handle.hxx>
+#include <TDF_Label.hxx>
 
 class TDF_Data;
 class TopoDS_Solid;
@@ -35,8 +36,11 @@ public:
   [[nodiscard]] QString name() const;
   void setName(const QString& name);
 
+  TDF_Label main() const;
+
 signals:
   void nameChanged(const QString&);
+  void shapeAdded(TDF_Label label);
 
 public slots:
   void createSolid(const TopoDS_Solid& solid);
