@@ -102,7 +102,9 @@ void Scene::addPresentation(TDF_Label label)
   Handle(TPrsStd_AISPresentation) presentation =
     TPrsStd_AISPresentation::Set(label, TNaming_NamedShape::GetID());
   presentation->SetMode(AIS_Shaded);
-  presentation->Display(false);
+
+  m_context->Display(presentation->GetAIS(), AIS_Shaded, 0, true);
+  emit viewUpdateRequested();
 }
 
 Handle(AIS_Shape) Scene::createConstructionPlane(const QString& name,

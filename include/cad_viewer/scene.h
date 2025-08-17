@@ -53,6 +53,8 @@ public:
 signals:
   void objectAdded(SceneObject* object);
 
+  void viewUpdateRequested();
+
 private slots:
   void addPresentation(TDF_Label label);
 

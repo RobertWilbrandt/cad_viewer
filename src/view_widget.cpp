@@ -14,6 +14,7 @@
 #include "cad_viewer/view_widget.h"
 
 #include "cad_viewer/graphic_driver.h"
+#include "cad_viewer/scene.h"
 #include "cad_viewer/scene_viewer.h"
 #include "cad_viewer/widget_view_controller.h"
 

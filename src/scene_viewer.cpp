@@ -42,6 +42,7 @@ SceneViewer::SceneViewer(Handle(V3d_Viewer) viewer,
   }
 
   m_scene = new Scene{document, m_context, this};
+  QObject::connect(m_scene, &Scene::viewUpdateRequested, this, &SceneViewer::viewUpdateRequested);
 
   QObject::connect(
     config->viewer(), &ViewerConfig::gridTypeChanged, this, &SceneViewer::setGridType);
