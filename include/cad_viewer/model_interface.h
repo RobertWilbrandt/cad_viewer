@@ -32,6 +32,8 @@ public:
 public slots:
   void setCurrentView(ViewWidget* view);
 
+  void createBox(double sx, double sy, double sz);
+
 private:
   Model* currentModel() const;
 

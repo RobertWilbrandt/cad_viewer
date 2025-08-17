@@ -19,6 +19,8 @@
 #include "cad_viewer/scene_viewer.h"
 #include "cad_viewer/view_widget.h"
 
+#include <BRepPrimAPI_MakeBox.hxx>
+
 namespace cad_viewer {
 
 ModelInterface::ModelInterface(QObject* parent)
@@ -29,6 +31,18 @@ ModelInterface::ModelInterface(QObject* parent)
 void ModelInterface::setCurrentView(ViewWidget* view)
 {
   m_cur_view = view;
+}
+
+void ModelInterface::createBox(double sx, double sy, double sz)
+{
+  auto* cur_model = currentModel();
+  if (!cur_model)
+  {
+    return;
+  }
+
+  BRepPrimAPI_MakeBox box_builder{sx, sy, sz};
+  cur_model->createSolid(box_builder.Solid());
 }
 
 Model* ModelInterface::currentModel() const

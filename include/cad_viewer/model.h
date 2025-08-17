@@ -19,6 +19,7 @@
 #include <Standard_Handle.hxx>
 
 class TDF_Data;
+class TopoDS_Solid;
 
 
 namespace cad_viewer {
@@ -36,6 +37,9 @@ public:
 
 signals:
   void nameChanged(const QString&);
+
+public slots:
+  void createSolid(const TopoDS_Solid& solid);
 
 private:
   Handle(TDF_Data) m_data;

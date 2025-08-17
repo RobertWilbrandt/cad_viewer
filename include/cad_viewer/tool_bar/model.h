@@ -29,7 +29,11 @@ class Model : public QWidget
 public:
   explicit Model(ModelInterface* model_interface, QWidget* parent = nullptr);
 
+private slots:
+  void primitiveBox();
+
 private:
+  ModelInterface* m_model_interface;
 };
 
 } // namespace cad_viewer::tool_bar

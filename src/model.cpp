@@ -14,7 +14,13 @@
 #include "cad_viewer/model.h"
 
 #include <TDF_Label.hxx>
+#include <TDF_Tool.hxx>
 #include <TDataStd_Name.hxx>
+#include <TNaming_Builder.hxx>
+#include <TopExp_Explorer.hxx>
+#include <TopoDS.hxx>
+#include <TopoDS_Face.hxx>
+#include <TopoDS_Solid.hxx>
 
 namespace cad_viewer {
 
@@ -60,6 +66,24 @@ void Model::setName(const QString& name)
 
     emit nameChanged(name);
   }
+}
+
+void Model::createSolid(const TopoDS_Solid& solid)
+{
+  TDF_Label label = m_data->Root().NewChild();
+  TNaming_Builder builder{label};
+  builder.Generated(solid);
+
+  for (auto explorer = TopExp_Explorer{solid, TopAbs_FACE}; explorer.More(); explorer.Next())
+  {
+    TopoDS_Face face = TopoDS::Face(explorer.Current());
+
+    TDF_Label child_label = label.NewChild();
+    TNaming_Builder child_builder{child_label};
+    child_builder.Generated(face);
+  }
+
+  TDF_Tool::DeepDump(std::cout, m_data);
 }
 
 } // namespace cad_viewer
