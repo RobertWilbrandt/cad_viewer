@@ -46,6 +46,8 @@ public slots:
   void createSolid(const TopoDS_Solid& solid);
 
 private:
+  void createOrigin(const TDF_Label& label);
+
   Handle(TDF_Data) m_data;
 };
 

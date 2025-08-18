@@ -17,6 +17,7 @@
 #include <QObject>
 #include <Standard_Handle.hxx>
 #include <TDF_Label.hxx>
+#include <optional>
 #include <vector>
 
 class AIS_InteractiveContext;
@@ -56,13 +57,11 @@ signals:
   void viewUpdateRequested();
 
 private slots:
-  void addPresentation(TDF_Label label);
+  void addShapePresentation(TDF_Label label);
 
 private:
-  Handle(AIS_Shape) createConstructionPlane(const QString& name,
-                                            const gp_Pnt& position,
-                                            const gp_Dir& dir,
-                                            const gp_Dir& x_dir);
+  std::optional<Standard_GUID> presentationDriver(const TDF_Label& label) const;
+  void addPresentation(TDF_Label label, const Standard_GUID& driver);
 
   void cleanupPresentations(const TDF_Label& label);
 

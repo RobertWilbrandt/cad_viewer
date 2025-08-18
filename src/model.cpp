@@ -16,11 +16,13 @@
 #include <TDF_Label.hxx>
 #include <TDF_Tool.hxx>
 #include <TDataStd_Name.hxx>
+#include <TDataXtd_Plane.hxx>
 #include <TNaming_Builder.hxx>
 #include <TopExp_Explorer.hxx>
 #include <TopoDS.hxx>
 #include <TopoDS_Face.hxx>
 #include <TopoDS_Solid.hxx>
+#include <gp_Pln.hxx>
 
 namespace cad_viewer {
 
@@ -28,6 +30,9 @@ Model::Model(Handle(TDF_Data) data, QObject* parent)
   : QObject{parent}
   , m_data{std::move(data)}
 {
+  const auto origin = m_data->Root().NewChild();
+  TDataStd_Name::Set(origin, "Origin");
+  createOrigin(origin);
 }
 
 QString Model::name() const
@@ -89,8 +94,22 @@ void Model::createSolid(const TopoDS_Solid& solid)
   }
 
   emit shapeAdded(label);
+}
 
-  TDF_Tool::DeepDump(std::cout, m_data);
+void Model::createOrigin(const TDF_Label& label)
+{
+  const auto create_plane =
+    [&](const TCollection_ExtendedString& name, const gp_Dir& dir, const gp_Dir& x_dir) {
+      TDF_Label plane_label = label.NewChild();
+      TDataStd_Name::Set(plane_label, name);
+
+      gp_Ax3 plane_ax{gp_Pnt{}, dir, x_dir};
+      TDataXtd_Plane::Set(plane_label, gp_Pln{plane_ax});
+    };
+
+  create_plane("XY", gp_Dir{0, 0, 1}, gp_Dir{1, 0, 0});
+  create_plane("XZ", gp_Dir{0, 1, 0}, gp_Dir{1, 0, 0});
+  create_plane("YZ", gp_Dir{1, 0, 0}, gp_Dir{0, 1, 0});
 }
 
 } // namespace cad_viewer
