@@ -13,6 +13,7 @@
 //----------------------------------------------------------------------
 #include "cad_viewer/model.h"
 
+#include <BRepPrimAPI_MakeBox.hxx>
 #include <TDF_Label.hxx>
 #include <TDF_Tool.hxx>
 #include <TDataStd_Name.hxx>
@@ -78,8 +79,11 @@ TDF_Label Model::main() const
   return m_data->Root();
 }
 
-void Model::createSolid(const TopoDS_Solid& solid)
+void Model::createBox(double sx, double sy, double sz)
 {
+  BRepPrimAPI_MakeBox box{sx, sy, sz};
+  const auto& solid = box.Solid();
+
   TDF_Label label = m_data->Root().NewChild();
   TNaming_Builder builder{label};
   builder.Generated(solid);

@@ -43,7 +43,7 @@ signals:
   void shapeAdded(TDF_Label label);
 
 public slots:
-  void createSolid(const TopoDS_Solid& solid);
+  void createBox(double sx, double sy, double sz);
 
 private:
   void createOrigin(const TDF_Label& label);
