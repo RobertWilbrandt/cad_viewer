@@ -17,6 +17,7 @@
 #include <TDF_Label.hxx>
 #include <TDF_Tool.hxx>
 #include <TDataStd_Name.hxx>
+#include <TDataStd_Real.hxx>
 #include <TDataXtd_Plane.hxx>
 #include <TNaming_Builder.hxx>
 #include <TopExp_Explorer.hxx>
@@ -81,10 +82,14 @@ TDF_Label Model::main() const
 
 void Model::createBox(double sx, double sy, double sz)
 {
+  TDF_Label label = m_data->Root().NewChild();
+  setProperty(label, "width", sx);
+  setProperty(label, "length", sy);
+  setProperty(label, "height", sz);
+
   BRepPrimAPI_MakeBox box{sx, sy, sz};
   const auto& solid = box.Solid();
 
-  TDF_Label label = m_data->Root().NewChild();
   TNaming_Builder builder{label};
   builder.Generated(solid);
 
@@ -96,6 +101,8 @@ void Model::createBox(double sx, double sy, double sz)
     TNaming_Builder child_builder{child_label};
     child_builder.Generated(face);
   }
+
+  TDF_Tool::DeepDump(std::cout, label);
 
   emit shapeAdded(label);
 }
@@ -114,6 +121,14 @@ void Model::createOrigin(const TDF_Label& label)
   create_plane("XY", gp_Dir{0, 0, 1}, gp_Dir{1, 0, 0});
   create_plane("XZ", gp_Dir{0, 1, 0}, gp_Dir{1, 0, 0});
   create_plane("YZ", gp_Dir{1, 0, 0}, gp_Dir{0, 1, 0});
+}
+
+void Model::setProperty(const TDF_Label& label, const std::string& name, double value)
+{
+  const auto property_label = label.NewChild();
+
+  TDataStd_Name::Set(property_label, name.c_str());
+  TDataStd_Real::Set(property_label, value);
 }
 
 } // namespace cad_viewer

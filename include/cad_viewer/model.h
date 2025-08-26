@@ -47,6 +47,7 @@ public slots:
 
 private:
   void createOrigin(const TDF_Label& label);
+  void setProperty(const TDF_Label& label, const std::string& name, double value);
 
   Handle(TDF_Data) m_data;
 };
