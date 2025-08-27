@@ -82,12 +82,13 @@ TDF_Label Model::main() const
 
 void Model::createBox(double sx, double sy, double sz)
 {
-  TDF_Label label = m_data->Root().NewChild();
-  setProperty(label, "width", sx);
-  setProperty(label, "length", sy);
-  setProperty(label, "height", sz);
+  TDF_Label label          = m_data->Root().NewChild();
+  TDF_Label property_label = label.FindChild(0);
+  setProperty(property_label, "width", sx);
+  setProperty(property_label, "length", sy);
+  setProperty(property_label, "height", sz);
 
-  BRepPrimAPI_MakeBox box{sx, sy, sz};
+  /*BRepPrimAPI_MakeBox box{sx, sy, sz};
   const auto& solid = box.Solid();
 
   TNaming_Builder builder{label};
@@ -100,11 +101,11 @@ void Model::createBox(double sx, double sy, double sz)
     TDF_Label child_label = label.NewChild();
     TNaming_Builder child_builder{child_label};
     child_builder.Generated(face);
-  }
+  }*/
 
   TDF_Tool::DeepDump(std::cout, label);
 
-  emit shapeAdded(label);
+  // emit shapeAdded(label);
 }
 
 void Model::createOrigin(const TDF_Label& label)
@@ -125,10 +126,10 @@ void Model::createOrigin(const TDF_Label& label)
 
 void Model::setProperty(const TDF_Label& label, const std::string& name, double value)
 {
-  const auto property_label = label.NewChild();
+  const auto new_label = label.NewChild();
 
-  TDataStd_Name::Set(property_label, name.c_str());
-  TDataStd_Real::Set(property_label, value);
+  TDataStd_Name::Set(new_label, name.c_str());
+  TDataStd_Real::Set(new_label, value);
 }
 
 } // namespace cad_viewer

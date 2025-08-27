@@ -1,5 +1,6 @@
 qt_add_executable(cad_viewer)
 
+add_subdirectory(feature)
 add_subdirectory(tool_bar)
 
 #
